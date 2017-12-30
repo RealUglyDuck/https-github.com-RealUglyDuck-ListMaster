@@ -9,52 +9,58 @@
 import UIKit
 import CoreData
 
-class MainVC: UIViewController,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout, UITableViewDelegate,UITableViewDataSource {
+class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
 
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
     
     var lists:[List]?
-    
-    let mainCellID = "MainCellIdentifier"
     let listCellID = "ListCellIdentifier"
-    let yourListsID = "YourListsCellIdentifier"
-    let cellIdentifier = "cellIdentifier"
-    
+
     lazy var pages:[Page] = {
         var pagesArray:[Page] = []
         let pageOne = Page(title: "Create New List", description: "Press the image above to create new list or swipe to go through your lists.", imageName: "NewListImage")
-        
         return pagesArray
     }()
     
-    let collectionView:UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 0
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.isPagingEnabled = true
-        return cv
-    }()
-    
-    
-    lazy var pageControl:UIPageControl = {
-        let pc = UIPageControl()
-        pc.numberOfPages = pages.count
-        pc.pageIndicatorTintColor = MAIN_COLOR
-        pc.currentPageIndicatorTintColor = SECONDARY_COLOR
-        return pc
-    }()
-    
     let listsTableView = UITableView()
+    
+    let titleBG:UIView = {
+        let background = UIView()
+        background.backgroundColor = MAIN_COLOR
+        return background
+    }()
+    
+    
+    let addItemButton: UIButton  = {
+        let button = UIButton()
+        button.setTitle("", for: .normal)
+        let backgroundImage = UIImage(named: "AddIcon")
+        button.setImage(backgroundImage, for: .normal)
+        button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
+        //        button.target(forAction: #selector(addNewItem), withSender: self)
+        return button
+    }()
+    
+    lazy var titleLabel: StandardUILabel = {
+        let textTitle = StandardUILabel()
+        textTitle.textColor = .white
+        textTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 24)
+        textTitle.textAlignment = .center
+        textTitle.text = "List Master"
+        return textTitle
+    }()
+    
+    @objc func addNewItem() {
+        performSegue(withIdentifier: "AddNewList", sender: self)
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupLayout()
         registerCells()
-        collectionView.delegate = self
-        collectionView.dataSource = self
         listsTableView.delegate = self
         listsTableView.dataSource = self
         listsTableView.separatorInset = UIEdgeInsets.zero
@@ -68,47 +74,9 @@ class MainVC: UIViewController,UICollectionViewDataSource,UICollectionViewDelega
     }
     
     func registerCells() {
-        collectionView.register(MainMenuCell.self, forCellWithReuseIdentifier: mainCellID)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
-        collectionView.register(YourListsCell.self, forCellWithReuseIdentifier: yourListsID)
         listsTableView.register(ListCell.self, forCellReuseIdentifier: listCellID)
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pageControl.numberOfPages
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let rect = CGSize(width: view.frame.width, height: view.frame.height)
-        return rect
-    }
-    
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        let pageNumber = Int(targetContentOffset.pointee.x / view.frame.width)
-        
-        pageControl.currentPage = pageNumber
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.row == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MainCellIdentifier", for: indexPath) as! MainMenuCell
-            let page = pages[indexPath.row]
-            cell.mainImage.image = UIImage(named:page.imageName)
-            cell.TitleUILabel.setTitle(page.title, for: .normal)
-            cell.titleDescription.text = page.description
-            cell.TitleUILabel.addTarget(self, action: #selector(addNewList), for: .touchUpInside)
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: yourListsID, for: indexPath) as! YourListsCell
-            cell.titleLabel.text = "Your Lists"
-            cell.backgroundColor = .white
-            cell.addSubview(listsTableView)
-            _ = listsTableView.constraintsWithDistanceTo(top: cell.titleLabel.bottomAnchor, left: cell.leftAnchor, right: cell.rightAnchor, bottom: cell.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
-            
-////            print("Lists number: \(lists?.count ?? 0)")
-            return cell
-        }
-    }
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -174,12 +142,22 @@ class MainVC: UIViewController,UICollectionViewDataSource,UICollectionViewDelega
     }
     
     func setupLayout() {
+        view.addSubview(listsTableView)
+        view.addSubview(titleBG)
+        view.addSubview(titleLabel)
+        view.addSubview(addItemButton)
+
+        
+        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
+        addItemButton.translatesAutoresizingMaskIntoConstraints = false
+        addItemButton.setPropertyOf(width: 22, height: 22)
+        addItemButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor).isActive = true
+        addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
+        titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
         view.backgroundColor = .white
-        collectionView.backgroundColor = .white
-        view.addSubview(collectionView)
-        view.addSubview(pageControl)
-        collectionView.constraintsTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
-        _ = pageControl.constraintAnchors(top: nil, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 40, width: nil)
+        listsTableView.constraintsTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+
+    
     }
     
     func getLists() {
@@ -216,13 +194,7 @@ class MainVC: UIViewController,UICollectionViewDataSource,UICollectionViewDelega
                 pages.append(page)
             }
         }
-        if lists != nil {
-            pageControl.numberOfPages = 2
-        } else {
-            pageControl.numberOfPages = 1
-        }
         
-        collectionView.reloadData()
         listsTableView.reloadData()
     }
     
