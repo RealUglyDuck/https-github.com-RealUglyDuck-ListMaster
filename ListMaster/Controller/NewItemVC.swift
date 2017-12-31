@@ -17,15 +17,19 @@ class NewItemVC: UIViewController {
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
     
-    let separator:UIView = {
-        let separatorView = UIView()
-        separatorView.backgroundColor = MAIN_COLOR
-        return separatorView
+    let titleBG:UIView = {
+        let background = UIView()
+        background.backgroundColor = MAIN_COLOR
+        return background
     }()
-
-    let titleLabel: TitleUILabel = {
-        let textTitle = TitleUILabel()
-        textTitle.text = "Create New List"
+    
+    
+    let titleLabel: StandardUILabel = {
+        let textTitle = StandardUILabel()
+        textTitle.text = "Add new items"
+        textTitle.textColor = .white
+        textTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 24)
+        textTitle.textAlignment = .center
         return textTitle
     }()
     
@@ -164,7 +168,6 @@ class NewItemVC: UIViewController {
     
     func setupLayout() {
         
-        view.addSubview(separator)
         view.addSubview(titleLabel)
         view.addSubview(itemNameTextField)
         view.addSubview(amountLabel)
@@ -172,20 +175,22 @@ class NewItemVC: UIViewController {
         view.addSubview(topSegmentedControl)
         view.addSubview(bottomSegmentedControl)
         view.addSubview(addedItemsLabel)
-        view.addSubview(addButton)
+        view.addSubview(titleBG)
         view.addSubview(backButton)
+        titleBG.addSubview(titleLabel)
+        view.addSubview(addButton)
         
-        _ = separator.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 45, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 0.5, width: nil)
-        _ = titleLabel.constraintsWithDistanceTo(top: separator.bottomAnchor, left: separator.leftAnchor, right: separator.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
-        titleLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        _ = itemNameTextField.constraintAnchors(top: titleLabel.bottomAnchor, left: separator.leftAnchor, right: separator.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 40, width: nil)
-        _ = amountLabel.constraintsWithDistanceTo(top: amountTextField.topAnchor, left: separator.leftAnchor, right: amountTextField.leftAnchor, bottom: amountTextField.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 10, bottomDistance: 0)
-        _ = amountTextField.constraintAnchors(top: itemNameTextField.bottomAnchor, left: view.centerXAnchor, right: separator.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 5, rightDistance: 0, bottomDistance: 0, height: 40, width: nil)
-        _ = topSegmentedControl.constraintAnchors(top: amountTextField.bottomAnchor, left: separator.leftAnchor, right: separator.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
-        _ = bottomSegmentedControl.constraintAnchors(top: topSegmentedControl.bottomAnchor, left: separator.leftAnchor, right: view.centerXAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
+        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
+        titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
+
+        _ = itemNameTextField.constraintAnchors(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 40, width: nil)
+        _ = amountLabel.constraintsWithDistanceTo(top: amountTextField.topAnchor, left: itemNameTextField.leftAnchor, right: amountTextField.leftAnchor, bottom: amountTextField.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 10, bottomDistance: 0)
+        _ = amountTextField.constraintAnchors(top: itemNameTextField.bottomAnchor, left: view.centerXAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 5, rightDistance: 0, bottomDistance: 0, height: 40, width: nil)
+        _ = topSegmentedControl.constraintAnchors(top: amountTextField.bottomAnchor, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
+        _ = bottomSegmentedControl.constraintAnchors(top: topSegmentedControl.bottomAnchor, left: itemNameTextField.leftAnchor, right: view.centerXAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
         _ = addedItemsLabel.constraintsWithDistanceTo(top: bottomSegmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 20)
-        addButtonConstraints = addButton.constraintAnchors(top: nil, left: separator.leftAnchor, right: separator.rightAnchor, bottom: backButton.topAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 10, height: 40, width: nil)
-        _ = backButton.constraintAnchors(top: nil, left: separator.leftAnchor, right: separator.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 25, height: 40, width: nil)
+        _ = addButton.constraintAnchors(top: nil, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: backButton.topAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 10, height: 40, width: nil)
+        _ = backButton.constraintAnchors(top: nil, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 25, height: 40, width: nil)
         
 
     }
