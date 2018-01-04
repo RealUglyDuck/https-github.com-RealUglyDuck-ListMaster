@@ -18,25 +18,33 @@ class ListCell: UITableViewCell {
         label.textAlignment = .right
         return label
     }()
-    
-//    let listIconImage:UIImageView = {
-//        let image = UIImageView()
-//        image.contentMode = .scaleAspectFit
-//        return image
-//    }()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupView()
         
-        listName.text = "Default"
-        
-        addSubview(listName)
-//        addSubview(listIconImage)
-        addSubview(created)
-//
-//        _ = listIconImage.constraintsWithDistanceTo(top: topAnchor, left: leftAnchor, right: nil, bottom: bottomAnchor, topDistance: 15, leftDistance: 15, rightDistance: 0, bottomDistance: 15)
-//        listIconImage.widthAnchor.constraint(equalTo: heightAnchor).isActive = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configureCell(object:List){
+        self.listName.text = object.name
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.init(identifier: "en_GB")
+        dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
+        if let creationDate = object.created {
+            self.created.text = dateFormatter.string(from: creationDate)
+        }
+    }
 
+    func setupView() {
+        self.backgroundColor = .clear
+        listName.text = "Default"
+        addSubview(listName)
+        addSubview(created)
+        
         _ = listName.constraintsWithDistanceTo(top: nil, left: leftAnchor, right: created.leftAnchor, bottom: nil, topDistance: 0, leftDistance: 25, rightDistance: 0, bottomDistance: 0)
         listName.centerInTheView(centerX: nil, centerY: centerYAnchor)
         
@@ -45,20 +53,9 @@ class ListCell: UITableViewCell {
         created.widthAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-
-    }
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
     }
 
 }

@@ -25,9 +25,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let backButton:StandardUIButton = {
         let button = StandardUIButton()
-        button.setTitle("Back", for: .normal)
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        button.setTitleColor(.white, for: .normal)
+        let image = UIImage(named: "BackButton")
+        button.setBackgroundImage(image, for: .normal)
         return button
     }()
     
@@ -41,12 +41,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         return button
     }()
     
-    lazy var titleLabel: StandardUILabel = {
-        let textTitle = StandardUILabel()
+    lazy var titleLabel: TitleUILabel = {
+        let textTitle = TitleUILabel()
         textTitle.text = listName
-        textTitle.textColor = .white
-        textTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 24)
-        textTitle.textAlignment = .center
         return textTitle
     }()
     
@@ -95,17 +92,17 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerCells()
         setupLayout()
         listTableView.delegate = self
         listTableView.dataSource = self
         controller.delegate = self
-        listTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        listTableView.separatorInset = .init(top: 0, left: 25, bottom: 1, right: 25)
-        
-        print(listName)
-        listTableView.register(ItemCell.self, forCellReuseIdentifier: "CellName")
         listTableView.reloadData()
-        
+    }
+    
+    func registerCells() {
+        listTableView.register(ItemCell.self, forCellReuseIdentifier: "CellName")
+        listTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -130,7 +127,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
+        listTableView.separatorColor = MAIN_COLOR
         return 40
     }
     
@@ -143,7 +140,8 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         let selectedSection = sections[section]
         if selectedSection.name == "1" {
             let header = TableHeaderView(leftTitle: "In Basket", rightTitle: "")
-            header.setColorsOf(text: .white, background: SECONDARY_COLOR)
+            let bg = SECONDARY_COLOR.withAlphaComponent(0.6)
+            header.setColorsOf(text: .white, background: bg)
             let width = tableView.bounds.width
             header.setPropertyOf(width: width, height: 30)
             return header
@@ -226,9 +224,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     cell.amount.textColor = SECONDARY_COLOR
                     cell.measureUnit.textColor = SECONDARY_COLOR
                 } else {
-                    cell.name.textColor = MAIN_COLOR
-                    cell.amount.textColor = MAIN_COLOR
-                    cell.measureUnit.textColor = MAIN_COLOR
+                    cell.name.textColor = .white
+                    cell.amount.textColor = .white
+                    cell.measureUnit.textColor = .white
                 }
             }
             
@@ -260,21 +258,29 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func setupLayout() {
+        view.addGradient()
         view.addSubview(titleBG)
-        view.addSubview(backButton)
-        view.addSubview(titleLabel)
+        titleBG.addSubview(backButton)
+        titleBG.addSubview(titleLabel)
+        titleBG.addSubview(addItemButton)
         view.addSubview(listTableView)
-        view.addSubview(addItemButton)
         
         _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
-        _ = backButton.constraintAnchors(top: titleBG.topAnchor, left: titleBG.leftAnchor, right: nil, bottom: titleBG.bottomAnchor, topDistance: 0, leftDistance: 25, rightDistance: 0, bottomDistance: 0, height: nil, width: 50)
+        
+        backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
+        backButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
+        backButton.setPropertyOf(width: 10, height: 22)
+        
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
         addItemButton.setPropertyOf(width: 22, height: 22)
-        addItemButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor).isActive = true
+        addItemButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
         addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
-        _ = titleLabel.constraintsWithDistanceTo(top: titleBG.topAnchor, left: backButton.rightAnchor, right: addItemButton.leftAnchor, bottom: titleBG.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
         
+        _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
         _ = listTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        
+        listTableView.backgroundColor = .clear
+        listTableView.separatorInset = .init(top: 0, left: 25, bottom: 1, right: 25)
     }
     
     func getItems() {

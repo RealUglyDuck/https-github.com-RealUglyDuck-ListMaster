@@ -24,19 +24,14 @@ class NewItemVC: UIViewController {
     }()
     
     
-    let titleLabel: StandardUILabel = {
-        let textTitle = StandardUILabel()
+    let titleLabel: TitleUILabel = {
+        let textTitle = TitleUILabel()
         textTitle.text = "Add new items"
-        textTitle.textColor = .white
-        textTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 24)
-        textTitle.textAlignment = .center
         return textTitle
     }()
     
     let itemNameTextField: NewTextField =  {
         let textField = NewTextField()
-        textField.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:MAIN_COLOR.withAlphaComponent(0.7)])
-        textField.placeholder = "Name"
         return textField
     }()
     
@@ -81,7 +76,6 @@ class NewItemVC: UIViewController {
         } else {
             self.topSegmentedControl.selectedSegmentIndex = UISegmentedControlNoSegment
         }
-        
     }
     
     let addedItemsLabel: StandardUILabel = {
@@ -101,9 +95,10 @@ class NewItemVC: UIViewController {
         return button
     }()
     
-    let backButton: FilledUIButton = {
-        let button = FilledUIButton()
-        button.setTitle("Back to List", for: .normal)
+    let backButton: StandardUIButton = {
+        let button = StandardUIButton()
+        let image = UIImage(named: "BackButton")
+        button.setBackgroundImage(image, for: .normal)
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         return button
     }()
@@ -167,8 +162,7 @@ class NewItemVC: UIViewController {
     }
     
     func setupLayout() {
-        
-        view.addSubview(titleLabel)
+        view.addGradient()
         view.addSubview(itemNameTextField)
         view.addSubview(amountLabel)
         view.addSubview(amountTextField)
@@ -176,22 +170,23 @@ class NewItemVC: UIViewController {
         view.addSubview(bottomSegmentedControl)
         view.addSubview(addedItemsLabel)
         view.addSubview(titleBG)
-        view.addSubview(backButton)
+        titleBG.addSubview(backButton)
         titleBG.addSubview(titleLabel)
         view.addSubview(addButton)
         
         _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
         titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
-
+        backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
+        backButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
+        backButton.setPropertyOf(width: 10, height: 22)
+        
         _ = itemNameTextField.constraintAnchors(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 40, width: nil)
         _ = amountLabel.constraintsWithDistanceTo(top: amountTextField.topAnchor, left: itemNameTextField.leftAnchor, right: amountTextField.leftAnchor, bottom: amountTextField.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 10, bottomDistance: 0)
         _ = amountTextField.constraintAnchors(top: itemNameTextField.bottomAnchor, left: view.centerXAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 5, rightDistance: 0, bottomDistance: 0, height: 40, width: nil)
         _ = topSegmentedControl.constraintAnchors(top: amountTextField.bottomAnchor, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
         _ = bottomSegmentedControl.constraintAnchors(top: topSegmentedControl.bottomAnchor, left: itemNameTextField.leftAnchor, right: view.centerXAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
         _ = addedItemsLabel.constraintsWithDistanceTo(top: bottomSegmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 20)
-        _ = addButton.constraintAnchors(top: nil, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: backButton.topAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 10, height: 40, width: nil)
-        _ = backButton.constraintAnchors(top: nil, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 25, height: 40, width: nil)
-        
+        _ = addButton.constraintAnchors(top: nil, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 25, height: 40, width: nil)
 
     }
     

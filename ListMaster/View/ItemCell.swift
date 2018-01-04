@@ -16,7 +16,7 @@ class ItemCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        self.backgroundColor = .clear
         self.addSubview(name)
         self.addSubview(amount)
         self.addSubview(measureUnit)
@@ -40,9 +40,9 @@ class ItemCell: UITableViewCell {
             self.amount.textColor = SECONDARY_COLOR
             self.measureUnit.textColor = SECONDARY_COLOR
         } else {
-            self.name.textColor = MAIN_COLOR
-            self.amount.textColor = MAIN_COLOR
-            self.measureUnit.textColor = MAIN_COLOR
+            self.name.textColor = .white
+            self.amount.textColor = .white
+            self.measureUnit.textColor = .white
         }
     }
     

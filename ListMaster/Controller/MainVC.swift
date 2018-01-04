@@ -9,19 +9,13 @@
 import UIKit
 import CoreData
 
-class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
+class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFetchedResultsControllerDelegate {
 
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
     
     var lists:[List]?
     let listCellID = "ListCellIdentifier"
-
-    lazy var pages:[Page] = {
-        var pagesArray:[Page] = []
-        let pageOne = Page(title: "Create New List", description: "Press the image above to create new list or swipe to go through your lists.", imageName: "NewListImage")
-        return pagesArray
-    }()
     
     let listsTableView = UITableView()
     
@@ -42,11 +36,8 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
         return button
     }()
     
-    lazy var titleLabel: StandardUILabel = {
-        let textTitle = StandardUILabel()
-        textTitle.textColor = .white
-        textTitle.font = UIFont(name: "HelveticaNeue-Medium", size: 24)
-        textTitle.textAlignment = .center
+    lazy var titleLabel: TitleUILabel = {
+        let textTitle = TitleUILabel()
         textTitle.text = "List Master"
         return textTitle
     }()
@@ -56,9 +47,27 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
         
     }
     
+    lazy var controller:NSFetchedResultsController<List> = {
+        
+        let request: NSFetchRequest<List> = List.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "created", ascending: false)
+        request.sortDescriptors = [sortDescriptor]
+        
+        let fetchController: NSFetchedResultsController<List> = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        do {
+            try fetchController.performFetch()
+        } catch let error{
+            print(error)
+            
+        }
+        listsTableView.reloadData()
+        return fetchController
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        controller.delegate = self
         setupLayout()
         registerCells()
         listsTableView.delegate = self
@@ -70,7 +79,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         getLists()
-        reloadData()
+        listsTableView.reloadData()
     }
     
     func registerCells() {
@@ -79,7 +88,10 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        guard let sections = controller.sections else {
+            return 0
+        }
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -89,17 +101,19 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(lists?.count ?? 0)
-        return lists?.count ?? 0
+        guard let sections = controller.sections else {
+            return 0
+        }
+        
+        let sectionInfo = sections[section]
+        return sectionInfo.numberOfObjects
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let headerView = createTableHeaderView()
         let header = TableHeaderView(leftTitle: "Name", rightTitle: "Created")
         let width = tableView.bounds.width
         header.setPropertyOf(width: width, height: 30)
         return header
-        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -118,23 +132,58 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
             }
     }
     
+    func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let action = UITableViewRowAction(style: .destructive, title: "Delete", handler: {(rowAction,indexPath) in
+            let object = self.controller.object(at: indexPath)
+            self.context.delete(object)
+            self.ad.saveContext()
+        })
+        return [action]
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print("reaload Data")
         let cell = tableView.dequeueReusableCell(withIdentifier: listCellID, for: indexPath) as! ListCell
         
-        if let listArray = lists {
-            cell.listName.text = listArray[indexPath.row].name
-//            cell.listIconImage.image = UIImage(named:"BasketImage")
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale.init(identifier: "en_GB")
-            dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-            if let creationDate = listArray[indexPath.row].created {
-               
-                cell.created.text = dateFormatter.string(from: creationDate)
-            }
-        }
+        let list = self.controller.object(at: indexPath)
+        
+        cell.configureCell(object: list)
+        cell.selectionStyle = .none
+        
         return cell
+    }
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        listsTableView.beginUpdates()
+        print("controller will change content")
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        print("enter controller serttings")
+        switch(type) {
+        case .delete :
+            listsTableView.deleteRows(at: [indexPath!], with: .top)
+            break
+        case .insert:
+            if let indexPath = newIndexPath{
+                listsTableView.insertRows(at: [indexPath], with: .fade)
+            }
+            break
+            
+        case .move:
+            listsTableView.moveRow(at: indexPath!, to: newIndexPath!)
+            break
+        case .update:
+            listsTableView.reloadRows(at: [indexPath!], with: .fade)
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        listsTableView.endUpdates()
     }
     
     @objc func addNewList() {
@@ -142,36 +191,36 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
     }
     
     func setupLayout() {
+        view.addGradient()
         view.addSubview(listsTableView)
         view.addSubview(titleBG)
         view.addSubview(titleLabel)
         view.addSubview(addItemButton)
 
-        
+        listsTableView.backgroundColor = .clear
         _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
         addItemButton.setPropertyOf(width: 22, height: 22)
         addItemButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor).isActive = true
         addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
         titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
-        view.backgroundColor = .white
-        listsTableView.constraintsTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        _ = listsTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
 
     
     }
     
     func getLists() {
         
-        let request:NSFetchRequest<List> = List.fetchRequest()
-        let sortDescriptor = NSSortDescriptor(key: "created", ascending: false)
-        request.sortDescriptors = [sortDescriptor]
-        
-        do {
-            let listTable = try context.fetch(request)
-            self.lists = listTable
-        } catch {
-            fatalError("\(error)")
-        }
+//        let request:NSFetchRequest<List> = List.fetchRequest()
+//        let sortDescriptor = NSSortDescriptor(key: "created", ascending: false)
+//        request.sortDescriptors = [sortDescriptor]
+//        
+//        do {
+//            let listTable = try context.fetch(request)
+//            self.lists = listTable
+//        } catch {
+//            fatalError("\(error)")
+//        }
     }
     
     func clearLists() {
@@ -182,21 +231,6 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource {
             }
         }
     }
-    
-    func reloadData() {
-        let pageOne = Page(title: "Create New List", description: "Press the image above to create new list or swipe to go through your lists.", imageName: "NewListImage")
-        pages = []
-        pages.append(pageOne)
-        if let listArray = lists {
-            for list in listArray {
-                print("page added")
-                let page = Page(title: list.name!, description: "", imageName: "BasketImage")
-                pages.append(page)
-            }
-        }
-        
-        listsTableView.reloadData()
-    }
-    
-}
 
+
+}

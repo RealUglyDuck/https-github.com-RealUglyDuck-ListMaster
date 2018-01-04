@@ -23,8 +23,10 @@ class LogoScreenVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = MAIN_COLOR
+        view.addGradient()
         view.addSubview(logo)
+        
+        
         
         logo.centerInTheView(centerX: view.centerXAnchor, centerY: view.centerYAnchor)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

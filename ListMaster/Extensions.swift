@@ -8,10 +8,12 @@
 
 import UIKit
 
+
+
 class StandardUIButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setTitleColor(MAIN_COLOR, for: .normal)
+        self.setTitleColor(.white, for: .normal)
         self.titleLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 16)
     }
     
@@ -37,7 +39,7 @@ class StandardUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.font = UIFont(name: "HelveticaNeue-Light", size: 16)
-        self.textColor = MAIN_COLOR
+        self.textColor = .white
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -49,7 +51,7 @@ class TitleUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.font = UIFont(name: "HelveticaNeue-Light", size: 24)
-        self.textColor = MAIN_COLOR
+        self.textColor = .white
         self.textAlignment = .center
     }
     required init?(coder aDecoder: NSCoder) {
@@ -62,12 +64,14 @@ class NewTextField: UITextField {
         super.init(frame: frame)
         self.layer.borderWidth = 0.5
         self.layer.borderColor = MAIN_COLOR.cgColor
-        self.textColor = MAIN_COLOR
+        self.textColor = .white
         self.font = UIFont(name: "HelveticaNeue-Light", size: 14)
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 40))
         self.leftView = paddingView
         self.leftViewMode = .always
-        self.backgroundColor = .white
+        self.backgroundColor = MAIN_COLOR
+        self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white.withAlphaComponent(0.7)])
+        self.placeholder = "Name"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -83,6 +87,8 @@ class StandardUISegmentedControl: UISegmentedControl {
         self.layer.borderWidth = 0.5
         self.layer.borderColor = MAIN_COLOR.cgColor
         self.tintColor = MAIN_COLOR
+        self.backgroundColor = .clear
+        self.setTitleTextAttributes([NSAttributedStringKey.foregroundColor:UIColor.white], for: .normal)
     }
 
     override init(items: [Any]?) {
@@ -180,6 +186,15 @@ extension UIView {
         if let width = width {
             self.widthAnchor.constraint(equalToConstant: width).isActive = true
         }
+    }
+    
+    func addGradient() {
+        let gradient = CAGradientLayer()
+        gradient.colors = [GRADIENT_COLOR_1,UIColor.black.cgColor]
+        gradient.frame = self.bounds
+        gradient.startPoint = .zero
+        gradient.endPoint = CGPoint.init(x: 1, y: 1)
+        self.layer.addSublayer(gradient)
     }
     
 }
