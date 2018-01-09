@@ -19,9 +19,26 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     let listsTableView = UITableView()
     
+    let logo:UIImageView = {
+        let screen = UIView()
+        let image = UIImageView()
+        screen.backgroundColor = MAIN_COLOR
+        screen.addSubview(image)
+        image.image = UIImage(named: "AppIcon")
+        image.centerInTheView(centerX: screen.centerXAnchor, centerY: screen.centerYAnchor)
+        image.setPropertyOf(width: 100, height: 74)
+        return image
+    }()
+    
+    let topView:UIView = {
+        let tv = UIView()
+        tv.backgroundColor = .clear
+        return tv
+    }()
+    
     let titleBG:UIView = {
         let background = UIView()
-        background.backgroundColor = MAIN_COLOR
+        background.backgroundColor = .clear
         return background
     }()
     
@@ -29,7 +46,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     let addItemButton: UIButton  = {
         let button = UIButton()
         button.setTitle("", for: .normal)
-        let backgroundImage = UIImage(named: "AddIcon")
+        let backgroundImage = UIImage(named: "AddButton")
         button.setImage(backgroundImage, for: .normal)
         button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
         //        button.target(forAction: #selector(addNewItem), withSender: self)
@@ -38,7 +55,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     lazy var titleLabel: TitleUILabel = {
         let textTitle = TitleUILabel()
-        textTitle.text = "List Master"
+        textTitle.text = "Your Lists"
         return textTitle
     }()
     
@@ -96,7 +113,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        tableView.separatorColor = MAIN_COLOR
+        tableView.separatorColor = .clear
         return 50
     }
     
@@ -110,10 +127,14 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
         let header = TableHeaderView(leftTitle: "Name", rightTitle: "Created")
-        let width = tableView.bounds.width
-        header.setPropertyOf(width: width, height: 30)
-        return header
+        headerView.addSubview(header)
+//        let width = tableView.bounds.width
+        
+        _ = header.constraintsTo(top: headerView.topAnchor, left: headerView.leftAnchor, right: headerView.rightAnchor, bottom: headerView.bottomAnchor)
+        header.setPropertyOf(width: nil, height: 30)
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -191,20 +212,26 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }
     
     func setupLayout() {
-        view.addGradient()
+//        view.addGradient()
+        view.backgroundColor = BACKGROUND_COLOR
         view.addSubview(listsTableView)
         view.addSubview(titleBG)
         view.addSubview(titleLabel)
         view.addSubview(addItemButton)
+        view.addSubview(topView)
+        topView.addSubview(logo)
+        
 
         listsTableView.backgroundColor = .clear
-        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
+        _ = topView.constraintsWithDistanceTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.centerYAnchor, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 50)
+        logo.centerInTheView(centerX: topView.centerXAnchor, centerY: topView.centerYAnchor)
+        _ = titleBG.constraintAnchors(top: topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
         addItemButton.setPropertyOf(width: 22, height: 22)
         addItemButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor).isActive = true
         addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
         titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
-        _ = listsTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        _ = listsTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
 
     
     }

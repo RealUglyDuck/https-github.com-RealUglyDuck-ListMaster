@@ -19,7 +19,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let titleBG:UIView = {
         let background = UIView()
-        background.backgroundColor = MAIN_COLOR
+        background.backgroundColor = .clear
         return background
     }()
     
@@ -127,7 +127,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        listTableView.separatorColor = MAIN_COLOR
+        listTableView.separatorColor = .clear
         return 40
     }
     
@@ -140,7 +140,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         let selectedSection = sections[section]
         if selectedSection.name == "1" {
             let header = TableHeaderView(leftTitle: "In Basket", rightTitle: "")
-            let bg = SECONDARY_COLOR.withAlphaComponent(0.6)
+            let bg = SECONDARY_COLOR
             header.setColorsOf(text: .white, background: bg)
             let width = tableView.bounds.width
             header.setPropertyOf(width: width, height: 30)
@@ -258,14 +258,14 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func setupLayout() {
-        view.addGradient()
+        view.backgroundColor = BACKGROUND_COLOR
         view.addSubview(titleBG)
         titleBG.addSubview(backButton)
         titleBG.addSubview(titleLabel)
         titleBG.addSubview(addItemButton)
         view.addSubview(listTableView)
         
-        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
+        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
         
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
         backButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
@@ -277,10 +277,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
         
         _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
-        _ = listTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        _ = listTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
         
         listTableView.backgroundColor = .clear
-        listTableView.separatorInset = .init(top: 0, left: 25, bottom: 1, right: 25)
     }
     
     func getItems() {

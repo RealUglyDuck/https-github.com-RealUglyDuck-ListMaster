@@ -71,7 +71,7 @@ class NewListVC: UIViewController {
     }
 
     func setupLayout() {
-        view.addGradient()
+        view.backgroundColor = BACKGROUND_COLOR
         view.addSubview(titleBG)
         titleBG.addSubview(backButton)
         titleBG.addSubview(titleLabel)
@@ -79,7 +79,7 @@ class NewListVC: UIViewController {
         view.addSubview(createButton)
         
 
-        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
+        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
 
         
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true

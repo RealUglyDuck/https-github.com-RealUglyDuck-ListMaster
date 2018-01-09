@@ -13,6 +13,12 @@ class ItemCell: UITableViewCell {
     let name = StandardUILabel()
     let amount = StandardUILabel()
     let measureUnit = StandardUILabel()
+    let separator:UIView = {
+        let sep = UIView()
+        sep.backgroundColor = MAIN_COLOR
+        return sep
+        
+    }()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -20,6 +26,7 @@ class ItemCell: UITableViewCell {
         self.addSubview(name)
         self.addSubview(amount)
         self.addSubview(measureUnit)
+        self.addSubview(separator)
         amount.textAlignment = .right
         _ = measureUnit.constraintsWithDistanceTo(top: self.topAnchor, left: nil, right: self.rightAnchor, bottom: self.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 25, bottomDistance: 0)
         measureUnit.setPropertyOf(width: 30, height: nil)
@@ -27,6 +34,7 @@ class ItemCell: UITableViewCell {
         amount.setPropertyOf(width: 50, height: nil)
         _ = name.constraintsWithDistanceTo(top: measureUnit.topAnchor, left: self.leftAnchor, right: amount.leftAnchor, bottom: measureUnit.bottomAnchor, topDistance: 0, leftDistance: 25, rightDistance: 5, bottomDistance: 0)
         
+        _ = separator.constraintAnchors(top: nil, left: self.leftAnchor, right: self.rightAnchor, bottom: self.bottomAnchor, topDistance: 0, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 0.5, width: nil)
         
     }
     

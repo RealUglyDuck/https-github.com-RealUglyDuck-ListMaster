@@ -18,6 +18,13 @@ class ListCell: UITableViewCell {
         label.textAlignment = .right
         return label
     }()
+    
+    let separator:UIView = {
+        let sep = UIView()
+        sep.backgroundColor = MAIN_COLOR
+        return sep
+        
+    }()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -44,6 +51,7 @@ class ListCell: UITableViewCell {
         listName.text = "Default"
         addSubview(listName)
         addSubview(created)
+        addSubview(separator)
         
         _ = listName.constraintsWithDistanceTo(top: nil, left: leftAnchor, right: created.leftAnchor, bottom: nil, topDistance: 0, leftDistance: 25, rightDistance: 0, bottomDistance: 0)
         listName.centerInTheView(centerX: nil, centerY: centerYAnchor)
@@ -51,6 +59,8 @@ class ListCell: UITableViewCell {
         _ = created.constraintsWithDistanceTo(top: nil, left: nil, right: rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 20, bottomDistance: 0)
         created.centerInTheView(centerX: nil, centerY: centerYAnchor)
         created.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        _ = separator.constraintAnchors(top: nil, left: self.leftAnchor, right: self.rightAnchor, bottom: self.bottomAnchor, topDistance: 0, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 0.5, width: nil)
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

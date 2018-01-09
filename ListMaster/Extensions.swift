@@ -50,7 +50,7 @@ class StandardUILabel: UILabel {
 class TitleUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.font = UIFont(name: "HelveticaNeue-Light", size: 24)
+        self.font = UIFont(name: "HelveticaNeue-Medium", size: 20)
         self.textColor = .white
         self.textAlignment = .center
     }
@@ -71,6 +71,21 @@ class NewTextField: UITextField {
         self.leftViewMode = .always
         self.backgroundColor = MAIN_COLOR
         self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white.withAlphaComponent(0.7)])
+        self.placeholder = "Name"
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class StandardSearchBar: UISearchBar {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.layer.borderWidth = 0.5
+        self.layer.borderColor = MAIN_COLOR.cgColor
+        self.tintColor = .white
+        self.backgroundColor = MAIN_COLOR
         self.placeholder = "Name"
     }
     

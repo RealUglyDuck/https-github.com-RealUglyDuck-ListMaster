@@ -8,18 +8,20 @@
 
 import UIKit
 
-class NewItemVC: UIViewController {
+class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate{
 
     var listName = ""
     var addButtonConstraints: [NSLayoutConstraint]? = nil
     var addedItemsCount = 0
+    var predictionData: [String] = []
+    var predictionDataFiltered: [String] = []
     
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
     
     let titleBG:UIView = {
         let background = UIView()
-        background.backgroundColor = MAIN_COLOR
+        background.backgroundColor = .clear
         return background
     }()
     
@@ -30,8 +32,8 @@ class NewItemVC: UIViewController {
         return textTitle
     }()
     
-    let itemNameTextField: NewTextField =  {
-        let textField = NewTextField()
+    let itemNameTextField: UISearchBar =  {
+        let textField = UISearchBar()
         return textField
     }()
     
@@ -63,8 +65,6 @@ class NewItemVC: UIViewController {
     
     lazy var bottomSegmentedControl: StandardUISegmentedControl = {
         let segment = StandardUISegmentedControl(items: ["l","ml"])
-//        segment.insertSegment(withTitle: "l", at: 0, animated: true)
-//        segment.insertSegment(withTitle: "ml", at: 1, animated: true)
         segment.tag = 1
         segment.addTarget(self, action: #selector(segmentPressed), for: .valueChanged)
         return segment
@@ -103,6 +103,103 @@ class NewItemVC: UIViewController {
         return button
     }()
     
+    let predictionTableView = UITableView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        itemNameTextField.delegate = self
+        predictionTableView.isHidden = true
+        setupLayout()
+        self.hideKeyboardWhenTappedAround()
+        predictionTableView.delegate = self
+        predictionTableView.dataSource = self
+        predictionTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        loadPredictionDataFromCSV()
+        predictionTableView.reloadData()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: Notification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: Notification.Name.UIKeyboardWillShow, object: nil)
+    }
+    
+    
+    @objc func keyboardWillAppear() {
+        
+    }
+    
+    @objc func keyboardWillDisappear() {
+        //Do something here
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return predictionDataFiltered.count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = predictionTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = predictionDataFiltered[indexPath.row]
+        
+        return cell
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if itemNameTextField.text == nil || itemNameTextField.text == "" {
+            predictionTableView.isHidden = true
+            
+        } else {
+            
+            let capitalized = itemNameTextField.text!.capitalized
+            print(capitalized)
+            predictionDataFiltered = predictionData.filter({$0.range(of: capitalized) != nil  })
+            
+            predictionTableView.reloadData()
+            predictionTableView.isHidden = false
+        }
+        
+        
+    }
+    
+    func setupLayout() {
+        view.backgroundColor = BACKGROUND_COLOR
+        view.addSubview(itemNameTextField)
+        view.addSubview(amountLabel)
+        view.addSubview(amountTextField)
+        view.addSubview(topSegmentedControl)
+        view.addSubview(bottomSegmentedControl)
+        view.addSubview(addedItemsLabel)
+        view.addSubview(titleBG)
+        titleBG.addSubview(backButton)
+        titleBG.addSubview(titleLabel)
+        view.addSubview(addButton)
+        view.addSubview(predictionTableView)
+        
+        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
+        titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
+        backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
+        backButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
+        backButton.setPropertyOf(width: 10, height: 22)
+        
+        _ = itemNameTextField.constraintAnchors(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 40, width: nil)
+        _ = amountLabel.constraintsWithDistanceTo(top: amountTextField.topAnchor, left: itemNameTextField.leftAnchor, right: amountTextField.leftAnchor, bottom: amountTextField.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 10, bottomDistance: 0)
+        _ = amountTextField.constraintAnchors(top: itemNameTextField.bottomAnchor, left: view.centerXAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 5, rightDistance: 0, bottomDistance: 0, height: 40, width: nil)
+        _ = topSegmentedControl.constraintAnchors(top: amountTextField.bottomAnchor, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
+        _ = bottomSegmentedControl.constraintAnchors(top: topSegmentedControl.bottomAnchor, left: itemNameTextField.leftAnchor, right: view.centerXAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
+        _ = addedItemsLabel.constraintsWithDistanceTo(top: bottomSegmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 20)
+        _ = predictionTableView.constraintsTo(top: addedItemsLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: addButton.topAnchor)
+        _ = addButton.constraintAnchors(top: nil, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 25, height: 40, width: nil)
+
+    }
+    
     @objc func backButtonPressed() {
         dismiss(animated: true, completion: nil)
     }
@@ -135,61 +232,6 @@ class NewItemVC: UIViewController {
         topSegmentedControl.selectedSegmentIndex = 0
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupLayout()
-        self.hideKeyboardWhenTappedAround()
-        view.backgroundColor = .white
-        print(listName)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: Notification.Name.UIKeyboardWillHide, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: Notification.Name.UIKeyboardWillShow, object: nil)
-    }
-    
-    
-    @objc func keyboardWillAppear() {
-        
-    }
-    
-    @objc func keyboardWillDisappear() {
-        //Do something here
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    func setupLayout() {
-        view.addGradient()
-        view.addSubview(itemNameTextField)
-        view.addSubview(amountLabel)
-        view.addSubview(amountTextField)
-        view.addSubview(topSegmentedControl)
-        view.addSubview(bottomSegmentedControl)
-        view.addSubview(addedItemsLabel)
-        view.addSubview(titleBG)
-        titleBG.addSubview(backButton)
-        titleBG.addSubview(titleLabel)
-        view.addSubview(addButton)
-        
-        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
-        titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
-        backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
-        backButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
-        backButton.setPropertyOf(width: 10, height: 22)
-        
-        _ = itemNameTextField.constraintAnchors(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 40, width: nil)
-        _ = amountLabel.constraintsWithDistanceTo(top: amountTextField.topAnchor, left: itemNameTextField.leftAnchor, right: amountTextField.leftAnchor, bottom: amountTextField.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 10, bottomDistance: 0)
-        _ = amountTextField.constraintAnchors(top: itemNameTextField.bottomAnchor, left: view.centerXAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 5, rightDistance: 0, bottomDistance: 0, height: 40, width: nil)
-        _ = topSegmentedControl.constraintAnchors(top: amountTextField.bottomAnchor, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
-        _ = bottomSegmentedControl.constraintAnchors(top: topSegmentedControl.bottomAnchor, left: itemNameTextField.leftAnchor, right: view.centerXAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 30, width: nil)
-        _ = addedItemsLabel.constraintsWithDistanceTo(top: bottomSegmentedControl.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 20)
-        _ = addButton.constraintAnchors(top: nil, left: itemNameTextField.leftAnchor, right: itemNameTextField.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 25, height: 40, width: nil)
-
-    }
-    
     private func getListObject(name:String)->List{
         do{
             let listObject = try context.fetch(List.fetchRequest()).filter {$0.name == name}
@@ -198,5 +240,23 @@ class NewItemVC: UIViewController {
             print(error)
         }
         return List()
+    }
+    
+    func loadPredictionDataFromCSV() {
+        guard let filePath = Bundle.main.path(forResource: "GroceryList", ofType: "csv") else {
+            return
+        }
+        do {
+            let data = try String(contentsOfFile: filePath, encoding: .utf8)
+            let rows = data.components(separatedBy: "\n")
+            for row in rows {
+                self.predictionData.append(row)
+            }
+        } catch {
+            print(error)
+        }
+        
+        
+        
     }
 }
