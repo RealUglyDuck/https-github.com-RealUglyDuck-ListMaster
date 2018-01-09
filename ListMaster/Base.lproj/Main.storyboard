@@ -40,7 +40,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="heR-9z-Grs"/>
                     <connections>
-                        <segue destination="ftv-ka-B9v" kind="show" identifier="AddNewList" id="xRg-Uj-Rla"/>
+                        <segue destination="ftv-ka-B9v" kind="presentation" identifier="AddNewList" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="xRg-Uj-Rla"/>
                         <segue destination="6zn-9N-nu0" kind="show" identifier="ShowSelectedListSegue" id="WOj-L1-z59"/>
                     </connections>
                 </viewController>

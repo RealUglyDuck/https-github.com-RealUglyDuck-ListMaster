@@ -25,9 +25,11 @@ class StandardUIButton: UIButton {
 class FilledUIButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.layer.cornerRadius = 20
         self.backgroundColor = MAIN_COLOR
         self.setTitleColor(.white, for: .normal)
-        self.titleLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 18)
+        self.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -62,14 +64,13 @@ class TitleUILabel: UILabel {
 class NewTextField: UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.layer.borderWidth = 0.5
-        self.layer.borderColor = MAIN_COLOR.cgColor
-        self.textColor = .white
+        self.layer.cornerRadius = 20
+        self.textColor = BACKGROUND_COLOR
         self.font = UIFont(name: "HelveticaNeue-Light", size: 14)
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 40))
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
         self.leftView = paddingView
         self.leftViewMode = .always
-        self.backgroundColor = MAIN_COLOR
+        self.backgroundColor = .white
         self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white.withAlphaComponent(0.7)])
         self.placeholder = "Name"
     }

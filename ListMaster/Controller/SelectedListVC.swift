@@ -17,24 +17,28 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     var listName:String = ""
     var productList: [Product]?
     
+    
     let titleBG:UIView = {
         let background = UIView()
         background.backgroundColor = .clear
         return background
     }()
     
+    let backButtonTapView = UIView()
+    
     let backButton:StandardUIButton = {
         let button = StandardUIButton()
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         let image = UIImage(named: "BackButton")
         button.setBackgroundImage(image, for: .normal)
+        
         return button
     }()
     
     let addItemButton: UIButton  = {
         let button = UIButton()
         button.setTitle("", for: .normal)
-        let backgroundImage = UIImage(named: "AddIcon")
+        let backgroundImage = UIImage(named: "AddButton")
         button.setImage(backgroundImage, for: .normal)
         button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
 //        button.target(forAction: #selector(addNewItem), withSender: self)
@@ -98,6 +102,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         listTableView.dataSource = self
         controller.delegate = self
         listTableView.reloadData()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(backButtonPressed))
+        backButtonTapView.addGestureRecognizer(tap)
     }
     
     func registerCells() {
@@ -261,15 +268,17 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         view.backgroundColor = BACKGROUND_COLOR
         view.addSubview(titleBG)
         titleBG.addSubview(backButton)
+        titleBG.addSubview(backButtonTapView)
         titleBG.addSubview(titleLabel)
         titleBG.addSubview(addItemButton)
         view.addSubview(listTableView)
         
         _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
-        
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
         backButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
         backButton.setPropertyOf(width: 10, height: 22)
+        backButtonTapView.centerInTheView(centerX: backButton.centerXAnchor, centerY: backButton.centerYAnchor)
+        backButtonTapView.setPropertyOf(width: 40, height: 40)
         
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
         addItemButton.setPropertyOf(width: 22, height: 22)
