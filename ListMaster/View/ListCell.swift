@@ -21,7 +21,7 @@ class ListCell: UITableViewCell {
     
     let separator:UIView = {
         let sep = UIView()
-        sep.backgroundColor = MAIN_COLOR
+        sep.backgroundColor = MAIN_COLOR.withAlphaComponent(0.8)
         return sep
         
     }()

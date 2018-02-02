@@ -8,8 +8,6 @@
 
 import UIKit
 
-
-
 class StandardUIButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -213,4 +211,5 @@ extension UIView {
         self.layer.addSublayer(gradient)
     }
     
+
 }

@@ -14,6 +14,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
     
+    
     var listName:String = ""
     var productList: [Product]?
     
@@ -80,8 +81,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func addNewItem() {
-        performSegue(withIdentifier: "AddNewItemSegue", sender: self)
-        
+        let vc = NewItemVC()
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -166,6 +168,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellName", for: indexPath) as! ItemCell
+         
         
         let product = self.controller.object(at: indexPath)
 
@@ -267,6 +270,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     func setupLayout() {
         view.backgroundColor = BACKGROUND_COLOR
         view.addSubview(titleBG)
+        
         titleBG.addSubview(backButton)
         titleBG.addSubview(backButtonTapView)
         titleBG.addSubview(titleLabel)
@@ -305,6 +309,11 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.productList = productTable
         } catch {
             fatalError("\(error)")
+        }
+        if productList != nil {
+            listTableView.isHidden = false
+        } else {
+            listTableView.isHidden = true
         }
     }
 }

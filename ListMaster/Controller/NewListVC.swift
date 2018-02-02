@@ -13,12 +13,7 @@ class NewListVC: UIViewController {
 
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
-    
-    let blurredBackground: UIVisualEffectView = {
-        let blur = UIBlurEffect(style: UIBlurEffectStyle.dark)
-        let view = UIVisualEffectView(effect: blur)
-        return view
-    }()
+
     
     let backgroundView: UIView = {
         let view = UIView()
@@ -29,6 +24,8 @@ class NewListVC: UIViewController {
         view.layer.cornerRadius = 23
         return view
     }()
+    
+    let closeButtonTapView = UIView()
     
     let closeButton: UIButton = {
         let button = UIButton()
@@ -74,25 +71,25 @@ class NewListVC: UIViewController {
         super.viewDidLoad()
         setupLayout()
         self.hideKeyboardWhenTappedAround()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(closeButtonPressed))
+        closeButtonTapView.addGestureRecognizer(tap)
     }
 
     func setupLayout() {
         view.backgroundColor = BACKGROUND_COLOR.withAlphaComponent(0.8)
         view.addSubview(backgroundView)
         view.addSubview(closeButton)
+        view.addSubview(closeButtonTapView)
         backgroundView.addSubview(stackView)
         stackView.addSubview(listNameTextField)
         stackView.addSubview(createButton)
-        listNameTextField.translatesAutoresizingMaskIntoConstraints = false
-        createButton.translatesAutoresizingMaskIntoConstraints = false
 
-        
-        
-//        blurredBackground.constraintsTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         _ = backgroundView.constraintsWithDistanceTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 45, leftDistance: 15, rightDistance: 15, bottomDistance: 0)
         backgroundView.setPropertyOf(width: nil, height: 190)
         _ = closeButton.constraintsWithDistanceTo(top: backgroundView.topAnchor, left: nil, right: backgroundView.rightAnchor, bottom: nil, topDistance: -7, leftDistance: 0, rightDistance: -7, bottomDistance: 0)
         closeButton.setPropertyOf(width: 22, height: 22)
+        closeButtonTapView.centerInTheView(centerX: closeButton.centerXAnchor, centerY: closeButton.centerYAnchor)
+        closeButtonTapView.setPropertyOf(width: 35, height: 35)
         stackView.centerInTheView(centerX: backgroundView.centerXAnchor, centerY: backgroundView.centerYAnchor)
         _ = stackView.constraintsWithDistanceTo(top: nil, left: backgroundView.leftAnchor, right: backgroundView.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 30, rightDistance: 30, bottomDistance: 0)
         stackView.setPropertyOf(width: nil, height: 110)

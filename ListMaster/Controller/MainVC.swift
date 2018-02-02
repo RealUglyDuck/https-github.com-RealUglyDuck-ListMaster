@@ -16,6 +16,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     var lists:[List]?
     let listCellID = "ListCellIdentifier"
+    var topViewConstraints: [NSLayoutConstraint] = []
     
     let listsTableView = UITableView()
     
@@ -32,8 +33,14 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     let topView:UIView = {
         let tv = UIView()
-        tv.backgroundColor = .clear
+        tv.backgroundColor = BACKGROUND_COLOR
         return tv
+    }()
+    
+    let bottomView:UIView = {
+        let bv = UIView()
+        bv.backgroundColor = .clear
+        return bv
     }()
     
     let titleBG:UIView = {
@@ -60,7 +67,9 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }()
     
     @objc func addNewItem() {
-        performSegue(withIdentifier: "AddNewList", sender: self)
+        let vc = NewListVC()
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true, completion: nil)
         
     }
     
@@ -90,12 +99,24 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         listsTableView.delegate = self
         listsTableView.dataSource = self
         listsTableView.separatorInset = UIEdgeInsets.zero
-        getLists()
-//        clearLists()
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+//        self.view.layoutIfNeeded()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        
+            UIView.animate(withDuration: 0.5, animations: {
+                let constraint = self.getConstraintWith(identifier: "bottomAnchorConstraint", from: self.topViewConstraints)
+                constraint?.constant = 0
+                self.view.layoutIfNeeded()
+            })
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        getLists()
+        
         listsTableView.reloadData()
     }
     
@@ -127,30 +148,36 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView()
-        let header = TableHeaderView(leftTitle: "Name", rightTitle: "Created")
-        headerView.addSubview(header)
-//        let width = tableView.bounds.width
         
-        _ = header.constraintsTo(top: headerView.topAnchor, left: headerView.leftAnchor, right: headerView.rightAnchor, bottom: headerView.bottomAnchor)
-        header.setPropertyOf(width: nil, height: 30)
+        let headerView = UITableViewHeaderFooterView()
+        let header = TableHeaderView(leftTitle: "Name", rightTitle: "Created")
+        
+        headerView.addSubview(header)
+        header.constraintsTo(top: headerView.topAnchor, left: headerView.leftAnchor, right: headerView.rightAnchor, bottom: headerView.bottomAnchor)
+//        header.setPropertyOf(width: nil, height: 30)
+        let head = UIView()
+        head.backgroundColor = .red
+        
         return headerView
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ShowSelectedListSegue", sender: self)
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let header = view as? UITableViewHeaderFooterView {
+            header.backgroundView?.backgroundColor = BACKGROUND_COLOR
+        }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "ShowSelectedListSegue" {
-                if let targetVC = segue.destination as? SelectedListVC {
-                    let index = listsTableView.indexPathForSelectedRow
-                    guard let cell = listsTableView.cellForRow(at: index!) as? ListCell else {
-                        return
-                    }
-                    targetVC.listName = cell.listName.text!
-                }
-            }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let selectedVC = SelectedListVC()
+        let cell = listsTableView.cellForRow(at: indexPath) as! ListCell
+        selectedVC.listName = cell.listName.text!
+        
+        present(selectedVC, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
@@ -211,45 +238,6 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         performSegue(withIdentifier: "AddNewList", sender: nil)
     }
     
-    func setupLayout() {
-//        view.addGradient()
-        view.backgroundColor = BACKGROUND_COLOR
-        view.addSubview(listsTableView)
-        view.addSubview(titleBG)
-        view.addSubview(titleLabel)
-        view.addSubview(addItemButton)
-        view.addSubview(topView)
-        topView.addSubview(logo)
-        
-
-        listsTableView.backgroundColor = .clear
-        _ = topView.constraintsWithDistanceTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.centerYAnchor, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 50)
-        logo.centerInTheView(centerX: topView.centerXAnchor, centerY: topView.centerYAnchor)
-        _ = titleBG.constraintAnchors(top: topView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
-        addItemButton.translatesAutoresizingMaskIntoConstraints = false
-        addItemButton.setPropertyOf(width: 22, height: 22)
-        addItemButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor).isActive = true
-        addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
-        titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
-        _ = listsTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
-
-    
-    }
-    
-    func getLists() {
-        
-//        let request:NSFetchRequest<List> = List.fetchRequest()
-//        let sortDescriptor = NSSortDescriptor(key: "created", ascending: false)
-//        request.sortDescriptors = [sortDescriptor]
-//        
-//        do {
-//            let listTable = try context.fetch(request)
-//            self.lists = listTable
-//        } catch {
-//            fatalError("\(error)")
-//        }
-    }
-    
     func clearLists() {
         if let listArray = lists {
             for list in listArray {
@@ -257,6 +245,15 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
                 ad.saveContext()
             }
         }
+    }
+    
+    func getConstraintWith(identifier:String, from array:[NSLayoutConstraint]) -> NSLayoutConstraint?{
+        for constraint in array {
+            if constraint.identifier == identifier {
+                return constraint
+            }
+        }
+        return nil
     }
 
 

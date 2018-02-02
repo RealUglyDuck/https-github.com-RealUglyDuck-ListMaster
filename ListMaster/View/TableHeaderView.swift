@@ -21,7 +21,9 @@ class TableHeaderView: UIView {
         super.init(frame: frame)
         
     }
+    
     convenience init(leftTitle leftTitleText:String,rightTitle rightTitleText:String) {
+        
         self.init(frame: CGRect())
         self.leftTitle.text = leftTitleText
         self.rightTitle.text = rightTitleText
@@ -55,5 +57,9 @@ class TableHeaderView: UIView {
         headerView.backgroundColor = backgroundColor
     }
     
+    func setTitles(leftTitle:String,rightTitle:String){
+        self.leftTitle.text = leftTitle
+        self.rightTitle.text = rightTitle
+    }
 }
 
