@@ -12,13 +12,12 @@ extension MainVC {
     func setupLayout() {
         //        view.addGradient()
         view.backgroundColor = BACKGROUND_COLOR
-        
+//        bottomView.backgroundColor = .white
         view.addSubview(bottomView)
         bottomView.addSubview(listsTableView)
         bottomView.addSubview(titleBG)
         titleBG.addSubview(titleLabel)
         titleBG.addSubview(addItemButton)
-        
         topView.addSubview(logo)
         view.addSubview(topView)
         let height = view.bounds.height/2

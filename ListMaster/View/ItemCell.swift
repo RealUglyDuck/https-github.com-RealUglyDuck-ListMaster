@@ -47,10 +47,12 @@ class ItemCell: UITableViewCell {
             self.name.textColor = SECONDARY_COLOR
             self.amount.textColor = SECONDARY_COLOR
             self.measureUnit.textColor = SECONDARY_COLOR
+            self.separator.backgroundColor = SECONDARY_COLOR.withAlphaComponent(0.5)
         } else {
             self.name.textColor = .white
             self.amount.textColor = .white
             self.measureUnit.textColor = .white
+            self.separator.backgroundColor = MAIN_COLOR.withAlphaComponent(0.5)
         }
     }
     

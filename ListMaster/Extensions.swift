@@ -38,7 +38,7 @@ class FilledUIButton: UIButton {
 class StandardUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.font = UIFont(name: "HelveticaNeue-Light", size: 16)
+        self.font = UIFont(name: "HelveticaNeue-Medium", size: 16)
         self.textColor = .white
     }
     

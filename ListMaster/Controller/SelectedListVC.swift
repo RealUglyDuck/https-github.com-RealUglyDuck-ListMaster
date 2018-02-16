@@ -70,9 +70,6 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         listTableView.reloadData()
-        
-        
-        
         return fetchController
     }()
     
@@ -83,6 +80,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     @objc func addNewItem() {
         let vc = NewItemVC()
         vc.modalPresentationStyle = .overCurrentContext
+        vc.listName = self.listName
         present(vc, animated: true, completion: nil)
     }
     
@@ -137,7 +135,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         listTableView.separatorColor = .clear
-        return 40
+        return 50
     }
     
     
@@ -233,10 +231,12 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     cell.name.textColor = SECONDARY_COLOR
                     cell.amount.textColor = SECONDARY_COLOR
                     cell.measureUnit.textColor = SECONDARY_COLOR
+                    cell.separator.backgroundColor = SECONDARY_COLOR.withAlphaComponent(0.5)
                 } else {
                     cell.name.textColor = .white
                     cell.amount.textColor = .white
                     cell.measureUnit.textColor = .white
+                    cell.separator.backgroundColor = MAIN_COLOR.withAlphaComponent(0.5)
                 }
             }
             

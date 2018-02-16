@@ -202,6 +202,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         plusButton.addGestureRecognizer(plusTapRecognizer)
         minusButton.addGestureRecognizer(minusTapRecognizer)
         itemNameTextField.delegate = self
+        itemNameTextField.becomeFirstResponder()
         let hideKeyboardTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         hideKeyboardTap.cancelsTouchesInView = false
         view.addGestureRecognizer(hideKeyboardTap)

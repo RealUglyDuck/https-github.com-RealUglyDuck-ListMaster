@@ -73,6 +73,7 @@ class NewListVC: UIViewController {
         self.hideKeyboardWhenTappedAround()
         let tap = UITapGestureRecognizer(target: self, action: #selector(closeButtonPressed))
         closeButtonTapView.addGestureRecognizer(tap)
+        listNameTextField.becomeFirstResponder()
     }
 
     func setupLayout() {
