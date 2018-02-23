@@ -21,7 +21,11 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let titleBG:UIView = {
         let background = UIView()
-        background.backgroundColor = .clear
+        background.backgroundColor = BACKGROUND_COLOR
+        background.layer.shadowColor = UIColor.black.cgColor
+        background.layer.shadowOpacity = 0.5
+        background.layer.shadowOffset = CGSize.zero
+        background.layer.shadowRadius = 10
         return background
     }()
     
@@ -74,28 +78,33 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }()
     
     @objc func backButtonPressed() {
-        dismiss(animated: true, completion: nil)
+        dismissFromLeft()
     }
     
     @objc func addNewItem() {
-        let vc = NewItemVC()
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.listName = self.listName
-        present(vc, animated: true, completion: nil)
+        let newItemVC = NewItemVC()
+//        newItemVC.modalPresentationStyle = .overCurrentContext
+        newItemVC.listName = self.listName
+        presentFromRight(viewControllerToPresent: newItemVC)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "AddNewItemSegue" {
-            if let targetVC = segue.destination as? NewItemVC {
-                targetVC.listName = self.listName
-            }
-        }
-    }
+    lazy var bottomBG: UIView = {
+        let background = UIView()
+        let button = StandardUIButton()
+        button.setTitle("Share List", for: .normal)
+        button.addTarget(self, action: #selector(handleSharing), for: .touchUpInside)
+        background.backgroundColor = BACKGROUND_COLOR
+        background.addSubview(button)
+        button.centerInTheView(centerX: nil, centerY: background.centerYAnchor)
+        button.rightAnchor.constraint(equalTo: background.rightAnchor, constant: -20).isActive = true
+        return background
+    }()
     
     let listTableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         registerCells()
         setupLayout()
         listTableView.delegate = self
@@ -110,6 +119,16 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     func registerCells() {
         listTableView.register(ItemCell.self, forCellReuseIdentifier: "CellName")
         listTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+    }
+    
+    @objc func handleSharing() {
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        guard let sharedImage = image else {return}
+        let activeView = UIActivityViewController(activityItems: [sharedImage], applicationActivities: nil)
+        present(activeView, animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -233,9 +252,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
                     cell.measureUnit.textColor = SECONDARY_COLOR
                     cell.separator.backgroundColor = SECONDARY_COLOR.withAlphaComponent(0.5)
                 } else {
-                    cell.name.textColor = .white
-                    cell.amount.textColor = .white
-                    cell.measureUnit.textColor = .white
+                    cell.name.textColor = MAIN_COLOR
+                    cell.amount.textColor = MAIN_COLOR
+                    cell.measureUnit.textColor = MAIN_COLOR
                     cell.separator.backgroundColor = MAIN_COLOR.withAlphaComponent(0.5)
                 }
             }
@@ -268,7 +287,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     func setupLayout() {
-        view.backgroundColor = BACKGROUND_COLOR
+        view.backgroundColor = .white
         view.addSubview(titleBG)
         
         titleBG.addSubview(backButton)
@@ -276,26 +295,32 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         titleBG.addSubview(titleLabel)
         titleBG.addSubview(addItemButton)
         view.addSubview(listTableView)
+        view.addSubview(bottomBG)
         
-        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 60, width: nil)
+        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 80, width: nil)
+        
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
-        backButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
+        backButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor, constant: 10).isActive = true
         backButton.setPropertyOf(width: 10, height: 22)
         backButtonTapView.centerInTheView(centerX: backButton.centerXAnchor, centerY: backButton.centerYAnchor)
         backButtonTapView.setPropertyOf(width: 40, height: 40)
         
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
-        addItemButton.setPropertyOf(width: 22, height: 22)
-        addItemButton.centerInTheView(centerX: nil, centerY: titleBG.centerYAnchor)
+        addItemButton.setPropertyOf(width: 32, height: 32)
+        addItemButton.centerInTheView(centerX: nil, centerY: backButton.centerYAnchor)
         addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
         
-        _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
-        _ = listTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: backButton.centerYAnchor)
+        _ = listTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBG.topAnchor, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        
+        bottomBG.constraintsTo(top: nil, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
+        bottomBG.setPropertyOf(width: nil, height: 40)
         
         listTableView.backgroundColor = .clear
     }
     
-    func getItems() {
+    func getItems() -> [Product]?{
         
         let request: NSFetchRequest<Product> = Product.fetchRequest()
         let predicate = NSPredicate(format: "toList.name == %@", listName)
@@ -306,14 +331,10 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         do {
             let productTable = try context.fetch(request)
-            self.productList = productTable
+            return productTable
         } catch {
             fatalError("\(error)")
         }
-        if productList != nil {
-            listTableView.isHidden = false
-        } else {
-            listTableView.isHidden = true
-        }
+        return nil
     }
 }

@@ -28,7 +28,7 @@ class TableHeaderView: UIView {
         self.leftTitle.text = leftTitleText
         self.rightTitle.text = rightTitleText
         self.setColorsOf(text: .white, background: MAIN_COLOR)
-        self.backgroundColor = .clear
+        self.backgroundColor = .white
         
         headerView.layer.cornerRadius = 14.5
         self.leftTitle.font = UIFont(name: "HelveticaNeue-bold", size: 16)

@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class StandardUIButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,9 +25,13 @@ class FilledUIButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.layer.cornerRadius = 20
-        self.backgroundColor = MAIN_COLOR
+        self.backgroundColor = BACKGROUND_COLOR
         self.setTitleColor(.white, for: .normal)
         self.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.2
+        self.layer.shadowOffset = CGSize(width: 5, height: 5)
+        self.layer.shadowRadius = 5
         
     }
     
@@ -39,7 +44,7 @@ class StandardUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.font = UIFont(name: "HelveticaNeue-Medium", size: 16)
-        self.textColor = .white
+        self.textColor = MAIN_COLOR
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -62,15 +67,19 @@ class TitleUILabel: UILabel {
 class NewTextField: UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.layer.cornerRadius = 20
-        self.textColor = BACKGROUND_COLOR
-        self.font = UIFont(name: "HelveticaNeue-Light", size: 14)
+        self.layer.cornerRadius = 10
+        self.textColor = .white
+        self.font = UIFont(name: "HelveticaNeue-Medium", size: 14)
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
         self.leftView = paddingView
         self.leftViewMode = .always
-        self.backgroundColor = .white
-        self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white.withAlphaComponent(0.7)])
-        self.placeholder = "Name"
+        self.backgroundColor = THIRD_COLOR
+        self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white])
+        self.placeholder = ""
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.2
+        self.layer.shadowOffset = CGSize(width: 5, height: 5)
+        self.layer.shadowRadius = 5
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -212,4 +221,27 @@ extension UIView {
     }
     
 
+}
+
+extension UIViewController {
+    
+    func presentFromRight(viewControllerToPresent: UIViewController) {
+        let transition = CATransition()
+//        transition.duration = 0.25
+        transition.type = kCATransitionMoveIn
+        transition.subtype = kCATransitionFromRight
+        self.view.window!.layer.add(transition, forKey: kCATransition)
+        
+        present(viewControllerToPresent, animated: false)
+    }
+    
+    func dismissFromLeft() {
+        let transition = CATransition()
+//        transition.duration = 0.25
+        transition.type = kCATransitionMoveIn
+        transition.subtype = kCATransitionFromLeft
+        self.view.window!.layer.add(transition, forKey: kCATransition)
+        
+        dismiss(animated: false)
+    }
 }

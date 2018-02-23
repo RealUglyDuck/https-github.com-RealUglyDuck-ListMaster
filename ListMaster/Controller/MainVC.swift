@@ -17,6 +17,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     var lists:[List]?
     let listCellID = "ListCellIdentifier"
     var topViewConstraints: [NSLayoutConstraint] = []
+    var topViewBottomConstraint:NSLayoutConstraint?
     
     let listsTableView = UITableView()
     
@@ -40,6 +41,10 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     let bottomView:UIView = {
         let bv = UIView()
         bv.backgroundColor = .clear
+        bv.layer.shadowColor = UIColor.black.cgColor
+        bv.layer.shadowOpacity = 0.5
+        bv.layer.shadowOffset = CGSize(width: 10, height: 10)
+        bv.layer.shadowRadius = 10
         return bv
     }()
     
@@ -63,6 +68,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     lazy var titleLabel: TitleUILabel = {
         let textTitle = TitleUILabel()
         textTitle.text = "Your Lists"
+        textTitle.textColor = MAIN_COLOR
         return textTitle
     }()
     
@@ -99,6 +105,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         listsTableView.delegate = self
         listsTableView.dataSource = self
         listsTableView.separatorInset = UIEdgeInsets.zero
+        view.clipsToBounds = true
         
     }
     
@@ -108,8 +115,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
         
             UIView.animate(withDuration: 0.5, animations: {
-                let constraint = self.getConstraintWith(identifier: "bottomAnchorConstraint", from: self.topViewConstraints)
-                constraint?.constant = 0
+                self.topViewBottomConstraint?.constant = 0
                 self.view.layoutIfNeeded()
             })
         }
@@ -154,7 +160,6 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         
         headerView.addSubview(header)
         header.constraintsTo(top: headerView.topAnchor, left: headerView.leftAnchor, right: headerView.rightAnchor, bottom: headerView.bottomAnchor)
-//        header.setPropertyOf(width: nil, height: 30)
         let head = UIView()
         head.backgroundColor = .red
         
@@ -176,8 +181,8 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         let selectedVC = SelectedListVC()
         let cell = listsTableView.cellForRow(at: indexPath) as! ListCell
         selectedVC.listName = cell.listName.text!
+        presentFromRight(viewControllerToPresent: selectedVC)
         
-        present(selectedVC, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
