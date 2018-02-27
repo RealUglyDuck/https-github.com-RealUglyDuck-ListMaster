@@ -38,7 +38,8 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         return tv
     }()
     
-    let bottomView:UIView = {
+    lazy var bottomView:UIView = {
+        
         let bv = UIView()
         bv.backgroundColor = .clear
         bv.layer.shadowColor = UIColor.black.cgColor
@@ -115,7 +116,8 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
         
             UIView.animate(withDuration: 0.5, animations: {
-                self.topViewBottomConstraint?.constant = 0
+                let height = self.view.bounds.height/2
+                self.topViewBottomConstraint?.constant = -height+50
                 self.view.layoutIfNeeded()
             })
         }

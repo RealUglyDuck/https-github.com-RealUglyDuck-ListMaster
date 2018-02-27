@@ -33,6 +33,8 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let backButton:StandardUIButton = {
         let button = StandardUIButton()
+        button.accessibilityTraits = UIAccessibilityTraitButton
+        button.accessibilityLabel = "Back to your lists"
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         let image = UIImage(named: "BackButton")
         button.setBackgroundImage(image, for: .normal)
@@ -43,10 +45,11 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let addItemButton: UIButton  = {
         let button = UIButton()
         button.setTitle("", for: .normal)
+        button.accessibilityTraits = UIAccessibilityTraitButton
+        button.accessibilityLabel = "Add products button"
         let backgroundImage = UIImage(named: "AddButton")
         button.setImage(backgroundImage, for: .normal)
         button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
-//        button.target(forAction: #selector(addNewItem), withSender: self)
         return button
     }()
     
@@ -60,10 +63,10 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let request: NSFetchRequest<Product> = Product.fetchRequest()
         let predicate = NSPredicate(format: "toList.name == %@", listName)
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: false)
+//        let sortDescriptor = NSSortDescriptor(key: "name", ascending: false)
         let sectionSortDescriptor = NSSortDescriptor(key: "isInBasket",ascending:true)
         request.predicate = predicate
-        request.sortDescriptors = [sectionSortDescriptor,sortDescriptor]
+        request.sortDescriptors = [sectionSortDescriptor]
         
         let fetchController: NSFetchedResultsController<Product> = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: "isInBasket", cacheName: nil)
         
@@ -93,6 +96,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         let button = StandardUIButton()
         button.setTitle("Share List", for: .normal)
         button.addTarget(self, action: #selector(handleSharing), for: .touchUpInside)
+        button.titleLabel?.font = UIFont(name: "HelveticaNeue-medium", size: 16)
         background.backgroundColor = BACKGROUND_COLOR
         background.addSubview(button)
         button.centerInTheView(centerX: nil, centerY: background.centerYAnchor)
@@ -122,12 +126,30 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @objc func handleSharing() {
-        UIGraphicsBeginImageContext(view.frame.size)
-        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: listTableView.contentSize.width, height: listTableView.contentSize.height),false, 0)
+        
+        let context = UIGraphicsGetCurrentContext()
+        
+        let previousFrame = listTableView.frame
+        
+        listTableView.frame = CGRect(x: listTableView.frame.origin.x, y: listTableView.frame.origin.y, width: listTableView.contentSize.width, height: listTableView.contentSize.height)
+        
+        listTableView.layer.render(in: context!)
+        
+        listTableView.frame = previousFrame
+        
         let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+        UIGraphicsEndImageContext();
+        
+//        imageView.image = image;
+//
+//        UIGraphicsBeginImageContext(view.frame.size)
+//        view.layer.render(in: UIGraphicsGetCurrentContext()!)
+//        let image = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
         guard let sharedImage = image else {return}
         let activeView = UIActivityViewController(activityItems: [sharedImage], applicationActivities: nil)
+        activeView.excludedActivityTypes = [UIActivityType.saveToCameraRoll]
         present(activeView, animated: true, completion: nil)
     }
     
@@ -191,6 +213,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         cell.configureCell(object: product)
         cell.selectionStyle = .none
+        cell.accessibilityLabel = "\(cell.name) \(cell.amount) \(cell.measureUnit)"
         
         return cell
     }

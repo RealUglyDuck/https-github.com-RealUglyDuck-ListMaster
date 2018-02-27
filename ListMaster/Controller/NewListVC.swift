@@ -30,6 +30,9 @@ class NewListVC: UIViewController {
         let image = UIImage(named:"CloseIcon")
         button.setImage(image, for: .normal)
         button.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
+        button.isAccessibilityElement = true
+        button.accessibilityLabel = "Back to Lists"
+        button.accessibilityTraits = UIAccessibilityTraitButton
         return button
     }()
     
@@ -50,6 +53,7 @@ class NewListVC: UIViewController {
     
     
     @objc func closeButtonPressed() {
+        dismissKeyboard()
         dismiss(animated: true, completion: nil)
     }
     

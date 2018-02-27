@@ -62,6 +62,10 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         button.setBackgroundImage(image, for: .normal)
         
+        button.accessibilityLabel = "Back to list"
+        
+        button.accessibilityTraits = UIAccessibilityTraitButton
+        
         return button
         
     }()
@@ -153,6 +157,8 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         label.textAlignment = .right
         
+        label.isAccessibilityElement = false
+        
         return label
         
     }()
@@ -171,7 +177,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
     }()
     
-    let plusButton: UIImageView = {
+    lazy var plusButton: UIImageView = {
         
         let button = UIImageView()
         
@@ -180,6 +186,14 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         button.image = UIImage(named: "PlusButton")
         
         button.isUserInteractionEnabled = true
+        
+        button.isAccessibilityElement = true
+
+        button.accessibilityTraits = UIAccessibilityTraitButton
+        
+        button.accessibilityTraits |= UIAccessibilityTraitUpdatesFrequently
+        
+        button.accessibilityLabel = "Tap to increase amount. Current amount \(amountTextField.text ?? "")"
         
         return button
     }()
@@ -194,6 +208,14 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         button.isUserInteractionEnabled = true
         
+        button.isAccessibilityElement = true
+        
+        button.accessibilityTraits = UIAccessibilityTraitButton
+        
+        button.accessibilityTraits |= UIAccessibilityTraitUpdatesFrequently
+        
+        button.accessibilityLabel = "Tap to decrease amount. Current amount \(amountTextField.text ?? "")"
+        
         return button
     }()
     
@@ -206,6 +228,9 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         currentAmount = currentAmount + 1
         
         amountTextField.text = String(currentAmount)
+        
+        plusButton.accessibilityLabel = "Tap to increase amount. Current amount \(currentAmount)"
+        minusButton.accessibilityLabel = "Tap to decrease amount. Current amount \(currentAmount)"
         
     }
     
@@ -221,6 +246,9 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             
             amountTextField.text = String(currentAmount)
             
+            plusButton.accessibilityLabel = "Tap to increase amount. Current amount \(currentAmount)"
+            minusButton.accessibilityLabel = "Tap to decrease amount. Current amount \(currentAmount)"
+            
         }
         
     }
@@ -228,18 +256,13 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     let amountTextField: NewTextField = {
         
         let textField = NewTextField()
-        
         textField.text = "1"
-        
         textField.keyboardType = UIKeyboardType.numberPad
-        
         textField.textAlignment = .right
-        
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 40))
-        
         textField.rightView = paddingView
-        
         textField.rightViewMode = .always
+        textField.isAccessibilityElement = true
         
         return textField
     }()
@@ -275,6 +298,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         button.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         return button
     }()
+
     
     let predictionTableView = UITableView()
     
@@ -287,6 +311,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         handleKeyboard()
         itemNameTextField.delegate = self
         itemNameTextField.becomeFirstResponder()
+        amountTextField.accessibilityLabel = "Amount set to \(amountTextField.text ?? "")"
     }
     
     func setupPredictionTableView() {
@@ -343,8 +368,10 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let choosedIndex = unitsModel.getSelectedUnitIndex()
         for index in unitButtons.indices {
             if index == choosedIndex {
+                unitButtons[index].accessibilityLabel = "Measure unit \(unitButtons[index].optionName.text ?? "") is selected"
                 unitButtons[index].backgroundColor = MAIN_COLOR
             } else {
+                unitButtons[index].accessibilityLabel = "Measure unit \(unitButtons[index].optionName.text ?? "") is not selected"
                 unitButtons[index].backgroundColor = MAIN_COLOR.withAlphaComponent(0.5)
             }
         }
@@ -355,8 +382,10 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if (touch.view?.isDescendant(of: mainStack))! {
-//        if (touch.view?.isDescendant(of: predictionTableView))! {
+//        if (touch.view?.isDescendant(of: mainStack))! {
+        if (touch.view?.isDescendant(of: predictionTableView))! {
+            return false
+        } else if (touch.view?.isDescendant(of: mainStack))! {
             return false
         } else {
             return true
@@ -380,9 +409,11 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = predictionTableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        
         cell.textLabel?.text = predictionDataFiltered[indexPath.row]
-        cell.backgroundColor = .clear
-        cell.textLabel?.textColor = .white
+        cell.backgroundColor = .white
+        cell.textLabel?.textColor = .black
+        cell.isAccessibilityElement = true
         return cell
     }
     
@@ -443,9 +474,12 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         UIView.animate(withDuration: 0.5, delay: 0.5, options: .curveEaseOut, animations: {
             self.addedItemPopupView.alpha = 0
+            
         }) { (true) in
             self.addedItemPopupView.isHidden = true
         }
+        
+        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString("Product added", comment: ""))
     }
     
     private func getListObject(name:String)->List{

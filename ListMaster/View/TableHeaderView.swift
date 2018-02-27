@@ -10,8 +10,16 @@ import UIKit
 
 class TableHeaderView: UIView {
     
-    let leftTitle = StandardUILabel()
-    let rightTitle = StandardUILabel()
+    let leftTitle: StandardUILabel = {
+        let title = StandardUILabel()
+        title.accessibilityTraits = UIAccessibilityTraitHeader
+        return title
+    }()
+    let rightTitle: StandardUILabel = {
+        let title = StandardUILabel()
+        title.accessibilityTraits = UIAccessibilityTraitHeader
+        return title
+    }()
     let headerView = UIView()
     let margin:CGFloat = 12.5
     

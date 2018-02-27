@@ -10,7 +10,26 @@ import UIKit
 
 class ItemCell: UITableViewCell {
 
-    let name = StandardUILabel()
+    override var isAccessibilityElement: Bool{
+        get {
+            return true
+        }
+        set {}
+    }
+    
+    override var accessibilityLabel: String? {
+        get{
+            return "\(name.text ?? "") \(amount.text ?? "") \(measureUnit.text ?? "")"
+        }
+        set{}
+    }
+    
+    let name:StandardUILabel =  {
+        let nameLabel = StandardUILabel()
+        nameLabel.numberOfLines = 0
+        nameLabel.lineBreakMode = .byWordWrapping
+        return nameLabel
+    }()
     let amount = StandardUILabel()
     let measureUnit = StandardUILabel()
     let separator:UIView = {
@@ -27,6 +46,7 @@ class ItemCell: UITableViewCell {
         self.addSubview(amount)
         self.addSubview(measureUnit)
         self.addSubview(separator)
+        
         amount.textAlignment = .right
         _ = measureUnit.constraintsWithDistanceTo(top: self.topAnchor, left: nil, right: self.rightAnchor, bottom: self.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 25, bottomDistance: 0)
         measureUnit.setPropertyOf(width: 30, height: nil)
@@ -54,7 +74,10 @@ class ItemCell: UITableViewCell {
             self.measureUnit.textColor = MAIN_COLOR
             self.separator.backgroundColor = MAIN_COLOR.withAlphaComponent(0.5)
         }
+        
     }
+
+
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

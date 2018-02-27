@@ -38,6 +38,25 @@ class FilledUIButton: UIButton {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override var isAccessibilityElement: Bool {
+        get { return true }
+        set {}
+    }
+    
+    override var accessibilityLabel: String? {
+        get {
+            return self.titleLabel?.text ?? ""
+        }
+        set {}
+    }
+    
+    override var accessibilityTraits: UIAccessibilityTraits {
+        get {
+            return UIAccessibilityTraitButton
+        }
+        set {}
+    }
 }
 
 class StandardUILabel: UILabel {
@@ -45,6 +64,7 @@ class StandardUILabel: UILabel {
         super.init(frame: frame)
         self.font = UIFont(name: "HelveticaNeue-Medium", size: 16)
         self.textColor = MAIN_COLOR
+        self.adjustsFontForContentSizeCategory = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -62,13 +82,25 @@ class TitleUILabel: UILabel {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override var isAccessibilityElement: Bool {
+        get{ return true }
+        set{}
+    }
+    
+    override var accessibilityTraits: UIAccessibilityTraits{
+        get{
+            return UIAccessibilityTraitHeader
+        }
+        set{}
+    }
 }
 
 class NewTextField: UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.layer.cornerRadius = 10
-        self.textColor = .white
+        self.textColor = MAIN_COLOR
         self.font = UIFont(name: "HelveticaNeue-Medium", size: 14)
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
         self.leftView = paddingView
@@ -85,6 +117,23 @@ class NewTextField: UITextField {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override var isAccessibilityElement: Bool{
+        get{
+            return true
+        }
+        set{}
+    }
+    
+    override var accessibilityLabel: String? {
+        get{
+            return self.placeholder
+        }
+        set{}
+    }
+    
+
+    
 }
 
 class StandardSearchBar: UISearchBar {
@@ -211,6 +260,20 @@ extension UIView {
         }
     }
     
+    func constraintWith(visualFormat:String,views:UIView...) {
+        
+        var viewsDict:Dictionary<String,UIView> = [:]
+        
+        for index in views.indices {
+            
+            views[index].translatesAutoresizingMaskIntoConstraints = false
+            let viewName = "v\(index)"
+            viewsDict[viewName] = views[index]
+        }
+        
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDict))
+    }
+    
     func addGradient() {
         let gradient = CAGradientLayer()
         gradient.colors = [GRADIENT_COLOR_1,UIColor.black.cgColor]
@@ -227,10 +290,15 @@ extension UIViewController {
     
     func presentFromRight(viewControllerToPresent: UIViewController) {
         let transition = CATransition()
-//        transition.duration = 0.25
-        transition.type = kCATransitionMoveIn
+        transition.duration = 2
+        transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromRight
+        
+        self.view.window?.layer.backgroundColor = UIColor.white.cgColor
+        self.view.window?.backgroundColor = .white
         self.view.window!.layer.add(transition, forKey: kCATransition)
+        viewControllerToPresent.modalPresentationStyle = .overCurrentContext
+        viewControllerToPresent.modalTransitionStyle = .coverVertical
         
         present(viewControllerToPresent, animated: false)
     }
