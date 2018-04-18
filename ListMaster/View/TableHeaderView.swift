@@ -39,8 +39,11 @@ class TableHeaderView: UIView {
         self.backgroundColor = .white
         
         headerView.layer.cornerRadius = 14.5
-        self.leftTitle.font = UIFont(name: "HelveticaNeue-bold", size: 16)
-        self.rightTitle.font = UIFont(name: "HelveticaNeue-bold", size: 16)
+        
+        let font = UIFont(name: "HelveticaNeue-bold", size: 16)
+        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+        self.leftTitle.font = fontMetrics.scaledFont(for: font!)
+        self.rightTitle.font = fontMetrics.scaledFont(for: font!)
         self.rightTitle.textAlignment = .right
         
         self.addSubview(headerView)
@@ -48,10 +51,10 @@ class TableHeaderView: UIView {
         headerView.addSubview(self.rightTitle)
         
         _ = headerView.constraintsWithDistanceTo(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, bottom: self.bottomAnchor, topDistance: 0, leftDistance: margin, rightDistance: margin, bottomDistance: 0)
-        _ = leftTitle.constraintsWithDistanceTo(top: headerView.topAnchor, left: headerView.leftAnchor, right: nil, bottom: headerView.bottomAnchor, topDistance: 0, leftDistance: margin, rightDistance: 0, bottomDistance: 0)
-        leftTitle.setPropertyOf(width: 100, height: nil)
-        _ = rightTitle.constraintsWithDistanceTo(top: headerView.topAnchor, left: nil, right: headerView.rightAnchor, bottom: headerView.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: margin, bottomDistance: 0)
-        rightTitle.setPropertyOf(width: 100, height: nil)
+        _ = leftTitle.constraintsWithDistanceTo(top: headerView.topAnchor, left: headerView.leftAnchor, right: headerView.centerXAnchor, bottom: headerView.bottomAnchor, topDistance: 0, leftDistance: margin, rightDistance: 10, bottomDistance: 0)
+//        leftTitle.setPropertyOf(width: 100, height: nil)
+        _ = rightTitle.constraintsWithDistanceTo(top: headerView.topAnchor, left: headerView.centerXAnchor, right: headerView.rightAnchor, bottom: headerView.bottomAnchor, topDistance: 0, leftDistance: 10, rightDistance: margin, bottomDistance: 0)
+//        rightTitle.setPropertyOf(width: 100, height: nil)
     }
     
     

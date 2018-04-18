@@ -49,7 +49,7 @@ class ItemCell: UITableViewCell {
         
         amount.textAlignment = .right
         _ = measureUnit.constraintsWithDistanceTo(top: self.topAnchor, left: nil, right: self.rightAnchor, bottom: self.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 25, bottomDistance: 0)
-        measureUnit.setPropertyOf(width: 30, height: nil)
+        measureUnit.setPropertyOf(width: 50, height: nil)
         _ = amount.constraintsWithDistanceTo(top: measureUnit.topAnchor, left: nil, right: measureUnit.leftAnchor, bottom: measureUnit.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 5, bottomDistance: 0)
         amount.setPropertyOf(width: 50, height: nil)
         _ = name.constraintsWithDistanceTo(top: measureUnit.topAnchor, left: self.leftAnchor, right: amount.leftAnchor, bottom: measureUnit.bottomAnchor, topDistance: 0, leftDistance: 25, rightDistance: 5, bottomDistance: 0)

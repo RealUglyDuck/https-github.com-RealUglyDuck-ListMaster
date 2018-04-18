@@ -21,7 +21,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
-        window?.rootViewController = MainVC()
+
+        
+        let defaults = UserDefaults.standard
+//        defaults.set(nil, forKey: "isFirstTime")
+        if defaults.object(forKey: "isFirstTime") == nil {
+            defaults.set("No", forKey: "isFirstTime")
+            defaults.synchronize()
+            window?.rootViewController = TutorialVC()
+        } else {
+            window?.rootViewController = MainVC()
+        }
+        
+        
         return true
     }
 

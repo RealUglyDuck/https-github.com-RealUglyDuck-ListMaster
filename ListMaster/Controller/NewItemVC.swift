@@ -7,9 +7,20 @@
 //
 
 import UIKit
+import CoreData
+
+protocol ListItemEditDelegate {
+    func userFinishedEditingItem(at indexPath: IndexPath)
+}
 
 class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIGestureRecognizerDelegate{
 
+    var productToEdit:Product?
+    
+    var indexPath:IndexPath?
+    
+    var delegate: ListItemEditDelegate?
+    
     var listName = ""
     
     var addButtonConstraints: [NSLayoutConstraint]? = nil
@@ -71,9 +82,11 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }()
     
     @objc func backButtonPressed() {
-        
-        dismissFromLeft()
-        
+        let slideTransition = SlideTransition()
+        slideTransition.transitionMode = .Dismiss
+        self.transitioningDelegate = slideTransition
+        dismissKeyboard()
+        dismiss(animated: true, completion: nil)
     }
     
     lazy var titleLabel: TitleUILabel = {
@@ -85,28 +98,6 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         return textTitle
         
     }()
-    
-    let closeButtonTapView = UIView()
-    
-    let closeButton: UIButton = {
-        
-        let button = UIButton()
-        
-        let image = UIImage(named:"CloseIcon")
-        
-        button.setImage(image, for: .normal)
-        
-        button.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
-        
-        return button
-        
-    }()
-    
-    @objc func closeButtonPressed() {
-        
-        dismiss(animated: true, completion: nil)
-        
-    }
     
     let mainStack: UIStackView = {
         
@@ -312,6 +303,12 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         itemNameTextField.delegate = self
         itemNameTextField.becomeFirstResponder()
         amountTextField.accessibilityLabel = "Amount set to \(amountTextField.text ?? "")"
+        
+        if productToEdit != nil {
+            setupEditView()
+            addButton.setTitle("Save", for: .normal)
+        }
+        
     }
     
     func setupPredictionTableView() {
@@ -326,6 +323,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     func handleKeyboard() {
         let hideKeyboardTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         hideKeyboardTap.cancelsTouchesInView = false
+        
         view.addGestureRecognizer(hideKeyboardTap)
         hideKeyboardTap.delegate = self
     }
@@ -382,11 +380,10 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-//        if (touch.view?.isDescendant(of: mainStack))! {
         if (touch.view?.isDescendant(of: predictionTableView))! {
             return false
-        } else if (touch.view?.isDescendant(of: mainStack))! {
-            return false
+//        } else if (touch.view?.isDescendant(of: mainStack))! {
+//            return false
         } else {
             return true
         }
@@ -447,25 +444,70 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         predictionTableView.isHidden = true
     }
     
+    func setupEditView() {
+        itemNameTextField.text = productToEdit?.name
+        amountTextField.text = productToEdit?.amount
+        for index in unitsTable.indices {
+            if unitsTable[index] == productToEdit?.measureUnit {
+                unitsModel.chooseUnit(at: index)
+                updateUnitsView()
+            }
+        }
+        
+    }
+    
     @objc func addButtonPressed(sender: UIButton) {
         if itemNameTextField.text == "" {
             return
         }
-        let item = Product(context: context)
-        item.name = itemNameTextField.text
-        item.amount = amountTextField.text
-        item.isInBasket = false
-        let list = getListObject(name: listName)
-        item.toList = list
-        item.measureUnit = "pcs"
-        let selectedUnitIndex = unitsModel.getSelectedUnitIndex()
-        item.measureUnit = unitsTable[selectedUnitIndex]
+        
+        if productToEdit != nil && indexPath != nil && delegate != nil {
+            let product = Product(context: context)
+            configure(product: product)
+//            let cell = ItemCell()
+//            cell.name.text = itemNameTextField.text
+//            cell.amount.text = amountTextField.text
+//            cell.measureUnit.text = "pcs"
+//            let selectedUnitIndex = unitsModel.getSelectedUnitIndex()
+//            cell.measureUnit.text = unitsTable[selectedUnitIndex]
+            delegate?.userFinishedEditingItem(at: indexPath!)
+            print("Cell sended to list")
+            backButtonPressed()
+            return
+        }
+        
+        let product = Product(context: context)
+        configure(product:product)
         ad.saveContext()
         animatePopupView()
+        resetView()
+    }
+    
+    func configure(product:Product) {
+        product.isInBasket = false
+        product.name = itemNameTextField.text
+        product.amount = amountTextField.text
+        guard let lists = getListObject(name: listName,objectType: List()) else {return}
+        for list in lists {
+            if list.name == listName {
+                product.toList = list
+            }
+        }
+        product.measureUnit = "pcs"
+        let selectedUnitIndex = unitsModel.getSelectedUnitIndex()
+        product.measureUnit = unitsTable[selectedUnitIndex]
+        if let oldProduct = productToEdit {
+            product.isInBasket = oldProduct.isInBasket
+        }
+    }
+    
+    func resetView() {
         itemNameTextField.text = ""
         amountTextField.text = "1"
         unitsModel.chooseUnit(at: 0)
         updateUnitsView()
+        predictionTableView.isHidden = true
+        itemNameTextField.becomeFirstResponder()
     }
     
     func animatePopupView() {
@@ -474,7 +516,6 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         UIView.animate(withDuration: 0.5, delay: 0.5, options: .curveEaseOut, animations: {
             self.addedItemPopupView.alpha = 0
-            
         }) { (true) in
             self.addedItemPopupView.isHidden = true
         }
@@ -482,14 +523,18 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString("Product added", comment: ""))
     }
     
-    private func getListObject(name:String)->List{
-        do{
-            let listObject = try context.fetch(List.fetchRequest()).filter {$0.name == name}
-            return listObject[0]
-        } catch {
-            print(error)
+    private func getListObject<T:NSManagedObject>(name:String, objectType: T)->[T]?{
+        
+        if let fetchRequest = T.fetchRequest() as? NSFetchRequest<T> {
+            do{
+                let listObject = try context.fetch(fetchRequest)
+                return listObject
+            } catch {
+                print(error)
+            }
         }
-        return List()
+        
+        return [objectType]
     }
     
     func loadPredictionDataFromCSV() {

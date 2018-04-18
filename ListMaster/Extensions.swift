@@ -8,12 +8,14 @@
 
 import UIKit
 
-
 class StandardUIButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setTitleColor(.white, for: .normal)
-        self.titleLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 16)
+        let font = UIFont(name: "HelveticaNeue-Light", size: 16)
+        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+        self.titleLabel?.font = fontMetrics.scaledFont(for: font!)
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,7 +29,9 @@ class FilledUIButton: UIButton {
         self.layer.cornerRadius = 20
         self.backgroundColor = BACKGROUND_COLOR
         self.setTitleColor(.white, for: .normal)
-        self.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
+        let font = UIFont(name: "HelveticaNeue-Medium", size: 18)
+        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+        self.titleLabel?.font = fontMetrics.scaledFont(for: font!)
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0.2
         self.layer.shadowOffset = CGSize(width: 5, height: 5)
@@ -62,9 +66,14 @@ class FilledUIButton: UIButton {
 class StandardUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.font = UIFont(name: "HelveticaNeue-Medium", size: 16)
+        let font = UIFont(name: "HelveticaNeue-Medium", size: 16)
+        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+        self.font = fontMetrics.scaledFont(for: font!)
+//        self.font = UIFont(name: "HelveticaNeue-Medium", size: 16)
         self.textColor = MAIN_COLOR
         self.adjustsFontForContentSizeCategory = true
+        self.numberOfLines = 0
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -75,7 +84,10 @@ class StandardUILabel: UILabel {
 class TitleUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.font = UIFont(name: "HelveticaNeue-Medium", size: 20)
+        let font = UIFont(name: "HelveticaNeue-Medium", size: 20)
+        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+        self.font = fontMetrics.scaledFont(for: font!)
+//        self.font = UIFont(name: "HelveticaNeue-Medium", size: 20)
         self.textColor = .white
         self.textAlignment = .center
     }
@@ -101,13 +113,20 @@ class NewTextField: UITextField {
         super.init(frame: frame)
         self.layer.cornerRadius = 10
         self.textColor = MAIN_COLOR
-        self.font = UIFont(name: "HelveticaNeue-Medium", size: 14)
+        self.backgroundColor = THIRD_COLOR
+        
+        let font = UIFont(name: "HelveticaNeue-Medium", size: 16)
+        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+        self.font = fontMetrics.scaledFont(for: font!)
+        self.adjustsFontForContentSizeCategory = true
+        
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
         self.leftView = paddingView
         self.leftViewMode = .always
-        self.backgroundColor = THIRD_COLOR
+
         self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white])
         self.placeholder = ""
+        
         self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0.2
         self.layer.shadowOffset = CGSize(width: 5, height: 5)
@@ -180,6 +199,15 @@ extension UIViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    func getConstraintWith(identifier:String, from array:[NSLayoutConstraint]) -> NSLayoutConstraint?{
+        for constraint in array {
+            if constraint.identifier == identifier {
+                return constraint
+            }
+        }
+        return nil
     }
 }
 
@@ -274,6 +302,8 @@ extension UIView {
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDict))
     }
     
+
+    
     func addGradient() {
         let gradient = CAGradientLayer()
         gradient.colors = [GRADIENT_COLOR_1,UIColor.black.cgColor]
@@ -284,32 +314,4 @@ extension UIView {
     }
     
 
-}
-
-extension UIViewController {
-    
-    func presentFromRight(viewControllerToPresent: UIViewController) {
-        let transition = CATransition()
-        transition.duration = 2
-        transition.type = kCATransitionPush
-        transition.subtype = kCATransitionFromRight
-        
-        self.view.window?.layer.backgroundColor = UIColor.white.cgColor
-        self.view.window?.backgroundColor = .white
-        self.view.window!.layer.add(transition, forKey: kCATransition)
-        viewControllerToPresent.modalPresentationStyle = .overCurrentContext
-        viewControllerToPresent.modalTransitionStyle = .coverVertical
-        
-        present(viewControllerToPresent, animated: false)
-    }
-    
-    func dismissFromLeft() {
-        let transition = CATransition()
-//        transition.duration = 0.25
-        transition.type = kCATransitionMoveIn
-        transition.subtype = kCATransitionFromLeft
-        self.view.window!.layer.add(transition, forKey: kCATransition)
-        
-        dismiss(animated: false)
-    }
 }

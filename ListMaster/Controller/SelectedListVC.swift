@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
+class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, ListItemEditDelegate {
 
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
@@ -17,7 +17,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var listName:String = ""
     var productList: [Product]?
-    
+    let listTableView = UITableView()
     
     let titleBG:UIView = {
         let background = UIView()
@@ -38,7 +38,6 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         let image = UIImage(named: "BackButton")
         button.setBackgroundImage(image, for: .normal)
-        
         return button
     }()
     
@@ -81,14 +80,19 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }()
     
     @objc func backButtonPressed() {
-        dismissFromLeft()
+        let slideTrans = SlideTransition()
+        slideTrans.transitionMode = .Dismiss
+        self.transitioningDelegate = slideTrans
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func addNewItem() {
+        let slideTransition = SlideTransition()
+        slideTransition.transitionMode = .Present
         let newItemVC = NewItemVC()
-//        newItemVC.modalPresentationStyle = .overCurrentContext
         newItemVC.listName = self.listName
-        presentFromRight(viewControllerToPresent: newItemVC)
+        newItemVC.transitioningDelegate = slideTransition
+        present(newItemVC, animated: true)
     }
     
     lazy var bottomBG: UIView = {
@@ -104,7 +108,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         return background
     }()
     
-    let listTableView = UITableView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -120,43 +124,43 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         backButtonTapView.addGestureRecognizer(tap)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        listTableView.reloadData()
+    }
+    
     func registerCells() {
         listTableView.register(ItemCell.self, forCellReuseIdentifier: "CellName")
         listTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     }
     
     @objc func handleSharing() {
+        
+        let list = generateListString()
         UIGraphicsBeginImageContextWithOptions(CGSize(width: listTableView.contentSize.width, height: listTableView.contentSize.height),false, 0)
         
-        let context = UIGraphicsGetCurrentContext()
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return
+        }
         
         let previousFrame = listTableView.frame
         
         listTableView.frame = CGRect(x: listTableView.frame.origin.x, y: listTableView.frame.origin.y, width: listTableView.contentSize.width, height: listTableView.contentSize.height)
         
-        listTableView.layer.render(in: context!)
+        
+        listTableView.layer.render(in: context)
         
         listTableView.frame = previousFrame
         
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext();
         
-//        imageView.image = image;
-//
-//        UIGraphicsBeginImageContext(view.frame.size)
-//        view.layer.render(in: UIGraphicsGetCurrentContext()!)
-//        let image = UIGraphicsGetImageFromCurrentImageContext()
-//        UIGraphicsEndImageContext()
         guard let sharedImage = image else {return}
-        let activeView = UIActivityViewController(activityItems: [sharedImage], applicationActivities: nil)
+        let activeView = UIActivityViewController(activityItems: [list], applicationActivities: nil)
         activeView.excludedActivityTypes = [UIActivityType.saveToCameraRoll]
         present(activeView, animated: true, completion: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-        listTableView.reloadData()
-    }
+
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = controller.sections else {
@@ -245,7 +249,22 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.context.delete(object)
             self.ad.saveContext()
         })
-        return [action]
+        
+        let editAction = UITableViewRowAction(style: .normal, title: "Edit") { (rowAction, indexPath) in
+            
+            let product = self.controller.object(at: indexPath)
+            let slideTransition = SlideTransition()
+            slideTransition.transitionMode = .Present
+            let vc = NewItemVC()
+            vc.listName = self.listName
+            vc.productToEdit = product
+            vc.indexPath = indexPath
+            vc.delegate = self
+            vc.transitioningDelegate = slideTransition
+            self.present(vc, animated: true)
+
+        }
+        return [action,editAction]
     }
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -308,6 +327,14 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         listTableView.endUpdates()
     }
+    
+    func userFinishedEditingItem(at indexPath: IndexPath) {
+        print("Delegate methot runned")
+        let product = self.controller.object(at: indexPath)
+        context.delete(product)
+        ad.saveContext()
+        listTableView.reloadData()
+    }
 
     func setupLayout() {
         view.backgroundColor = .white
@@ -325,9 +352,9 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
         backButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor, constant: 10).isActive = true
-        backButton.setPropertyOf(width: 10, height: 22)
+        backButton.setPropertyOf(width: 20, height: 30)
         backButtonTapView.centerInTheView(centerX: backButton.centerXAnchor, centerY: backButton.centerYAnchor)
-        backButtonTapView.setPropertyOf(width: 40, height: 40)
+        backButtonTapView.setPropertyOf(width: 80, height: 50)
         
         addItemButton.translatesAutoresizingMaskIntoConstraints = false
         addItemButton.setPropertyOf(width: 32, height: 32)
@@ -359,5 +386,18 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             fatalError("\(error)")
         }
         return nil
+    }
+    
+    func generateListString() -> String{
+        var list = ""
+        let numberOfRows = listTableView.numberOfRows(inSection: 0)
+        for index in 0..<numberOfRows {
+            if let cell = listTableView.cellForRow(at: IndexPath(row: index, section: 0)) as? ItemCell{
+                list += "\(cell.name.text!)\t\(cell.amount.text!)\(cell.measureUnit.text!)\n"
+            }
+            
+        }
+        print(list)
+        return list
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class NewListVC: UIViewController {
+class NewListVC: UIViewController, UIGestureRecognizerDelegate {
 
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
@@ -53,6 +53,7 @@ class NewListVC: UIViewController {
     
     
     @objc func closeButtonPressed() {
+        print("Background tapped")
         dismissKeyboard()
         dismiss(animated: true, completion: nil)
     }
@@ -74,10 +75,26 @@ class NewListVC: UIViewController {
         setupLayout()
         self.hideKeyboardWhenTappedAround()
         let tap = UITapGestureRecognizer(target: self, action: #selector(closeButtonPressed))
+        tap.delegate = self
         closeButtonTapView.addGestureRecognizer(tap)
         listNameTextField.becomeFirstResponder()
+//        let tapBackground = UIGestureRecognizer(target: self, action: #selector(closeButtonPressed))
+        view.addGestureRecognizer(tap)
     }
 
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    
+        if touch.view!.isDescendant(of: backgroundView) {
+            
+            return false
+            
+        } else {
+            
+            return true
+            
+        }
+    }
+    
     func setupLayout() {
         view.backgroundColor = BACKGROUND_COLOR.withAlphaComponent(0.8)
         view.addSubview(backgroundView)

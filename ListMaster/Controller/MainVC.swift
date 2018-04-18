@@ -21,12 +21,27 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     let listsTableView = UITableView()
     
+    let infoTapView = UIButton()
+    
+    let infoIcon:UIImageView = {
+        let icon = UIImageView()
+        icon.image = UIImage(named: "InfoIcon")
+        return icon
+    }()
+    
+    @objc func infoButtonPressed() {
+        print("Info button pressed")
+        let tutorialVC = TutorialVC()
+        tutorialVC.isRootViewController = false
+        present(tutorialVC, animated: true, completion: nil)
+    }
+    
     let logo:UIImageView = {
         let screen = UIView()
         let image = UIImageView()
         screen.backgroundColor = MAIN_COLOR
         screen.addSubview(image)
-        image.image = UIImage(named: "AppIcon")
+        image.image = UIImage(named: "Logo")
         image.centerInTheView(centerX: screen.centerXAnchor, centerY: screen.centerYAnchor)
         image.setPropertyOf(width: 100, height: 74)
         return image
@@ -39,7 +54,6 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }()
     
     lazy var bottomView:UIView = {
-        
         let bv = UIView()
         bv.backgroundColor = .clear
         bv.layer.shadowColor = UIColor.black.cgColor
@@ -61,7 +75,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         button.setTitle("", for: .normal)
         let backgroundImage = UIImage(named: "AddButton")
         button.setImage(backgroundImage, for: .normal)
-        button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
+        button.addTarget(self, action: #selector(addNewItemPressed), for: .touchUpInside)
         //        button.target(forAction: #selector(addNewItem), withSender: self)
         return button
     }()
@@ -73,12 +87,14 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         return textTitle
     }()
     
-    @objc func addNewItem() {
+    @objc func addNewItemPressed() {
         let vc = NewListVC()
         vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true, completion: nil)
         
     }
+    
+    let noListsView = NoListView()
     
     lazy var controller:NSFetchedResultsController<List> = {
         
@@ -98,6 +114,8 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         return fetchController
     }()
     
+    let dismissSlideTransition = SlideTransition()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         controller.delegate = self
@@ -107,13 +125,17 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         listsTableView.dataSource = self
         listsTableView.separatorInset = UIEdgeInsets.zero
         view.clipsToBounds = true
-        
+        infoTapView.addTarget(self, action: #selector(infoButtonPressed), for: .touchUpInside)
     }
     
     override func viewDidAppear(_ animated: Bool) {
 //        self.view.layoutIfNeeded()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        if listsTableView.numberOfRows(inSection: 0) == 0 {
+            noListsView.isHidden = false
+        } else {
+            noListsView.isHidden = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
         
             UIView.animate(withDuration: 0.5, animations: {
                 let height = self.view.bounds.height/2
@@ -126,6 +148,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     override func viewWillAppear(_ animated: Bool) {
         
         listsTableView.reloadData()
+        UIApplication.shared.isStatusBarHidden = false
     }
     
     func registerCells() {
@@ -135,8 +158,10 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
 
     func numberOfSections(in tableView: UITableView) -> Int {
         guard let sections = controller.sections else {
+            listsTableView.isHidden = true
             return 0
         }
+        listsTableView.isHidden = false
         return sections.count
     }
     
@@ -178,12 +203,17 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         return 30
     }
     
+    let slideTransition = SlideTransition()
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let selectedVC = SelectedListVC()
         let cell = listsTableView.cellForRow(at: indexPath) as! ListCell
         selectedVC.listName = cell.listName.text!
-        presentFromRight(viewControllerToPresent: selectedVC)
+        slideTransition.transitionMode = .Present
+        selectedVC.transitioningDelegate = slideTransition
+        present(selectedVC, animated: true, completion: nil)
+//        presentFromRight(viewControllerToPresent: selectedVC)
         
     }
     
@@ -201,7 +231,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("reaload Data")
+
         let cell = tableView.dequeueReusableCell(withIdentifier: listCellID, for: indexPath) as! ListCell
         
         let list = self.controller.object(at: indexPath)
@@ -239,11 +269,13 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         listsTableView.endUpdates()
+        if listsTableView.numberOfRows(inSection: 0) == 0 {
+            noListsView.isHidden = false
+        } else {
+            noListsView.isHidden = true
+        }
     }
-    
-    @objc func addNewList() {
-        performSegue(withIdentifier: "AddNewList", sender: nil)
-    }
+
     
     func clearLists() {
         if let listArray = lists {
@@ -254,14 +286,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         }
     }
     
-    func getConstraintWith(identifier:String, from array:[NSLayoutConstraint]) -> NSLayoutConstraint?{
-        for constraint in array {
-            if constraint.identifier == identifier {
-                return constraint
-            }
-        }
-        return nil
-    }
+
 
 
 }

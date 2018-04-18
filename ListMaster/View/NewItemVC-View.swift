@@ -44,9 +44,9 @@ extension NewItemVC{
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
         backButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor, constant: 10).isActive = true
-        backButton.setPropertyOf(width: 10, height: 22)
+        backButton.setPropertyOf(width: 20, height: 30)
         backButtonTapView.centerInTheView(centerX: backButton.centerXAnchor, centerY: backButton.centerYAnchor)
-        backButtonTapView.setPropertyOf(width: 40, height: 40)
+        backButtonTapView.setPropertyOf(width: 80, height: 50)
         
         _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: backButton.centerYAnchor)
         

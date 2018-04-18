@@ -21,8 +21,19 @@ extension MainVC {
         topView.addSubview(logo)
         view.addSubview(addItemButton)
         listsTableView.backgroundColor = .clear
+        topView.addSubview(infoIcon)
+        topView.addSubview(infoTapView)
+        view.addSubview(noListsView)
+        
         let height = (view.bounds.height/2)-50
+        
         topViewConstraints = topView.constraintsWithDistanceTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 20, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        
+        _ = infoIcon.constraintAnchors(top: topView.topAnchor, left: nil, right: topView.rightAnchor, bottom: nil, topDistance: 10, leftDistance:0 , rightDistance: 10, bottomDistance: 0, height: 32, width: 32)
+        infoTapView.centerInTheView(centerX: infoIcon.centerXAnchor, centerY: infoIcon.centerYAnchor)
+        infoTapView.setPropertyOf(width: 50, height: 50)
+
+        
         logo.centerInTheView(centerX: topView.centerXAnchor, centerY: topView.centerYAnchor)
 //        logo.centerYAnchor.constraint(equalTo: topView.centerYAnchor, constant: -200).isActive = true
         
@@ -35,6 +46,7 @@ extension MainVC {
         
         titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
         _ = listsTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: bottomView.leftAnchor, right: bottomView.rightAnchor, bottom: bottomView.bottomAnchor, topDistance: 0, leftDistance: 15, rightDistance: 15, bottomDistance: 0)
+        noListsView.constraintsWithDistanceTo(top: listsTableView.topAnchor, left: listsTableView.leftAnchor, right: listsTableView.rightAnchor, bottom: listsTableView.bottomAnchor, topDistance: 40, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
         topViewBottomConstraint = getConstraintWith(identifier: "bottomAnchorConstraint", from: topViewConstraints)
 //        constraint?.constant = height
         
