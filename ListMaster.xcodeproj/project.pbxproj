@@ -10,7 +10,8 @@
 		AE1C4DB720556DF300D5BEB3 /* TutorialVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1C4DB620556DF300D5BEB3 /* TutorialVC.swift */; };
 		AE1C4DB92055833500D5BEB3 /* TutorialViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE1C4DB82055833500D5BEB3 /* TutorialViewCell.swift */; };
 		AE2945711FE82ED500AD0C91 /* SelectedListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2945701FE82ED500AD0C91 /* SelectedListVC.swift */; };
-		AE3F8CA32087DB3500C1C211 /* NoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3F8CA22087DB3500C1C211 /* NoListView.swift */; };
+		AE3F8CA32087DB3500C1C211 /* EmptyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3F8CA22087DB3500C1C211 /* EmptyListView.swift */; };
+		AE4D825720BA0017002D1348 /* DeleteConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D825620BA0017002D1348 /* DeleteConfirmationView.swift */; };
 		AE4E287220378B1100551F51 /* UnitOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4E287120378B1100551F51 /* UnitOptionView.swift */; };
 		AE68C679203F668E0070B01F /* ListMasterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE68C678203F668E0070B01F /* ListMasterUITests.swift */; };
 		AE6920091FCF3E17005C610E /* ListMaster.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AE6920071FCF3E17005C610E /* ListMaster.xcdatamodeld */; };
@@ -50,7 +51,8 @@
 		AE1C4DB620556DF300D5BEB3 /* TutorialVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialVC.swift; sourceTree = "<group>"; };
 		AE1C4DB82055833500D5BEB3 /* TutorialViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewCell.swift; sourceTree = "<group>"; };
 		AE2945701FE82ED500AD0C91 /* SelectedListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedListVC.swift; sourceTree = "<group>"; };
-		AE3F8CA22087DB3500C1C211 /* NoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoListView.swift; sourceTree = "<group>"; };
+		AE3F8CA22087DB3500C1C211 /* EmptyListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyListView.swift; sourceTree = "<group>"; };
+		AE4D825620BA0017002D1348 /* DeleteConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteConfirmationView.swift; sourceTree = "<group>"; };
 		AE4E287120378B1100551F51 /* UnitOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitOptionView.swift; sourceTree = "<group>"; };
 		AE68C676203F668D0070B01F /* ListMasterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ListMasterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE68C678203F668E0070B01F /* ListMasterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListMasterUITests.swift; sourceTree = "<group>"; };
@@ -130,7 +132,8 @@
 				AEFE0AFF1FF5836C002E994B /* TableHeaderView.swift */,
 				AE4E287120378B1100551F51 /* UnitOptionView.swift */,
 				AE1C4DB82055833500D5BEB3 /* TutorialViewCell.swift */,
-				AE3F8CA22087DB3500C1C211 /* NoListView.swift */,
+				AE3F8CA22087DB3500C1C211 /* EmptyListView.swift */,
+				AE4D825620BA0017002D1348 /* DeleteConfirmationView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -236,7 +239,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Paweł Ambrożej";
 				TargetAttributes = {
 					AE68C675203F668D0070B01F = {
@@ -321,10 +324,11 @@
 				AE7A147B1FE969CC00D67A84 /* NewItemVC.swift in Sources */,
 				AE1C4DB92055833500D5BEB3 /* TutorialViewCell.swift in Sources */,
 				AE6E23861FCF362900F2C969 /* Product.swift in Sources */,
+				AE4D825720BA0017002D1348 /* DeleteConfirmationView.swift in Sources */,
 				AED010041FCB646A003DC497 /* Extensions.swift in Sources */,
 				AE6E23841FCF361B00F2C969 /* List.swift in Sources */,
 				AEADC2FD2051860E0078E14B /* SlideTransition.swift in Sources */,
-				AE3F8CA32087DB3500C1C211 /* NoListView.swift in Sources */,
+				AE3F8CA32087DB3500C1C211 /* EmptyListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,6 +408,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -411,6 +416,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -461,6 +467,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -468,6 +475,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

@@ -94,7 +94,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         
     }
     
-    let noListsView = NoListView()
+    let emptyListsView = EmptyListView(firstString: "You don't have any lists. \n Press ", imageName: "AddButton", secondString: " button to create new list.")
     
     lazy var controller:NSFetchedResultsController<List> = {
         
@@ -131,9 +131,9 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     override func viewDidAppear(_ animated: Bool) {
 //        self.view.layoutIfNeeded()
         if listsTableView.numberOfRows(inSection: 0) == 0 {
-            noListsView.isHidden = false
+            emptyListsView.isHidden = false
         } else {
-            noListsView.isHidden = true
+            emptyListsView.isHidden = true
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
         
@@ -244,11 +244,11 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         listsTableView.beginUpdates()
-        print("controller will change content")
+        
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        print("enter controller serttings")
+        
         switch(type) {
         case .delete :
             listsTableView.deleteRows(at: [indexPath!], with: .top)
@@ -270,9 +270,9 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         listsTableView.endUpdates()
         if listsTableView.numberOfRows(inSection: 0) == 0 {
-            noListsView.isHidden = false
+            emptyListsView.isHidden = false
         } else {
-            noListsView.isHidden = true
+            emptyListsView.isHidden = true
         }
     }
 

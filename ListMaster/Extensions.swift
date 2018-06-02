@@ -265,6 +265,12 @@ extension UIView {
         return constraints
     }
     
+    func constraintToSuperView() {
+        if let superview = superview {
+            constraintsTo(top: superview.topAnchor, left: superview.leftAnchor, right: superview.rightAnchor, bottom: superview.bottomAnchor)
+        }
+    }
+    
     func centerInTheView(centerX:NSLayoutXAxisAnchor?, centerY:NSLayoutYAxisAnchor?) {
         self.translatesAutoresizingMaskIntoConstraints = false
         if let centerX = centerX {
@@ -301,8 +307,6 @@ extension UIView {
         
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDict))
     }
-    
-
     
     func addGradient() {
         let gradient = CAGradientLayer()

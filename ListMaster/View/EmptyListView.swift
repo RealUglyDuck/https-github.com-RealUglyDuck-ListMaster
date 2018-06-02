@@ -8,24 +8,28 @@
 
 import UIKit
 
-class NoListView: UIView {
+class EmptyListView: UIView {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    let firstString = "You don't have any lists. \n Press "
+    let image = UIImage(named: "AddButton")
+    let secondString = " button to create new list."
+    
+    init(firstString: String, imageName: String, secondString: String) {
+        super.init(frame: .zero)
+        
         backgroundColor = .white
         
         let label = UILabel()
         let fontType = UIFont(name: "HelveticaNeue-Medium", size: 16)
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         let font = fontMetrics.scaledFont(for: fontType!)
-        let attributedText = NSMutableAttributedString(string: "You don't have any lists. \n Press ", attributes: [NSAttributedStringKey.font:font])
+        let attributedText = NSMutableAttributedString(string: firstString, attributes: [NSAttributedStringKey.font:font])
         let attributedImage = NSTextAttachment()
-        let image = UIImage(named: "AddButton")
-        attributedImage.image = image
+        attributedImage.image = UIImage(named: imageName)
         attributedImage.bounds = CGRect(x: 0, y: -(image?.size.height)!/8, width: (image?.size.width)!/2, height: (image?.size.height)!/2)
         
         attributedText.append(NSAttributedString(attachment: attributedImage))
-        attributedText.append(NSAttributedString(string: " button to create new list.", attributes: [NSAttributedStringKey.font:font]))
+        attributedText.append(NSAttributedString(string: secondString, attributes: [NSAttributedStringKey.font:font]))
         label.attributedText = attributedText
         label.textColor = MAIN_COLOR
         addSubview(label)

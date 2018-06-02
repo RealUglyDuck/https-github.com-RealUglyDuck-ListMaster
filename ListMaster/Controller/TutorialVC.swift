@@ -155,9 +155,6 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TutorialViewCell
         cell.configureCell(page: pages[indexPath.item])
-        print(indexPath.item)
-        
-
         return cell
     }
     

@@ -53,6 +53,7 @@ class ListCell: UITableViewCell {
         addSubview(created)
         addSubview(separator)
         
+        
         _ = listName.constraintsWithDistanceTo(top: nil, left: leftAnchor, right: created.leftAnchor, bottom: nil, topDistance: 0, leftDistance: 25, rightDistance: 0, bottomDistance: 0)
         listName.centerInTheView(centerX: nil, centerY: centerYAnchor)
         
@@ -61,6 +62,7 @@ class ListCell: UITableViewCell {
         created.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
         _ = separator.constraintAnchors(top: nil, left: self.leftAnchor, right: self.rightAnchor, bottom: self.bottomAnchor, topDistance: 0, leftDistance: 25, rightDistance: 25, bottomDistance: 0, height: 0.5, width: nil)
+        
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
