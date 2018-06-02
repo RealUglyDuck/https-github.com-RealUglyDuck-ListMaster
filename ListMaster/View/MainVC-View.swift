@@ -46,7 +46,7 @@ extension MainVC {
         
         titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: titleBG.centerYAnchor)
         _ = listsTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: bottomView.leftAnchor, right: bottomView.rightAnchor, bottom: bottomView.bottomAnchor, topDistance: 0, leftDistance: 15, rightDistance: 15, bottomDistance: 0)
-        emptyListsView.constraintsWithDistanceTo(top: listsTableView.topAnchor, left: listsTableView.leftAnchor, right: listsTableView.rightAnchor, bottom: listsTableView.bottomAnchor, topDistance: 40, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        _ = emptyListsView.constraintsWithDistanceTo(top: listsTableView.topAnchor, left: listsTableView.leftAnchor, right: listsTableView.rightAnchor, bottom: listsTableView.bottomAnchor, topDistance: 40, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
         topViewBottomConstraint = getConstraintWith(identifier: "bottomAnchorConstraint", from: topViewConstraints)
 //        constraint?.constant = height
         

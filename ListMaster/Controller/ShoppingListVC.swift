@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, ListItemEditDelegate {
+class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, ListItemEditDelegate {
 
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
@@ -108,6 +108,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         return background
     }()
     
+    let emptyListView = EmptyListView(firstString: "You don't have any products. \n Press ", imageName: "AddButton", secondString: " button to add new products")
     
     
     override func viewDidLoad() {
@@ -122,10 +123,11 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(backButtonPressed))
         backButtonTapView.addGestureRecognizer(tap)
+
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        listTableView.reloadData()
+    override func viewDidAppear(_ animated: Bool) {
+        checkIfListIsEmpty()
     }
     
     func registerCells() {
@@ -160,6 +162,13 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         present(activeView, animated: true, completion: nil)
     }
     
+    func checkIfListIsEmpty() {
+        if listTableView.visibleCells.count == 0  {
+            emptyListView.isHidden = false
+        } else {
+            emptyListView.isHidden = true
+        }
+    }
 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -326,6 +335,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         listTableView.endUpdates()
+        checkIfListIsEmpty()
     }
     
     func userFinishedEditingItem(at indexPath: IndexPath) {
@@ -338,13 +348,13 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     func setupLayout() {
         view.backgroundColor = .white
+        view.addSubview(listTableView)
+        view.addSubview(emptyListView)
         view.addSubview(titleBG)
-        
         titleBG.addSubview(backButton)
         titleBG.addSubview(backButtonTapView)
         titleBG.addSubview(titleLabel)
         titleBG.addSubview(addItemButton)
-        view.addSubview(listTableView)
         view.addSubview(bottomBG)
         
         _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 80, width: nil)
@@ -363,6 +373,7 @@ class SelectedListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: backButton.centerYAnchor)
         _ = listTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBG.topAnchor, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        _ = emptyListView.constraintsWithDistanceTo(top: listTableView.topAnchor, left: listTableView.leftAnchor, right: listTableView.rightAnchor, bottom: listTableView.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
         
         bottomBG.constraintsTo(top: nil, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         bottomBG.setPropertyOf(width: nil, height: 40)

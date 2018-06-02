@@ -129,12 +129,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }
     
     override func viewDidAppear(_ animated: Bool) {
-//        self.view.layoutIfNeeded()
-        if listsTableView.numberOfRows(inSection: 0) == 0 {
-            emptyListsView.isHidden = false
-        } else {
-            emptyListsView.isHidden = true
-        }
+        checkIfListIsEmpty()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
         
             UIView.animate(withDuration: 0.5, animations: {
@@ -146,7 +141,6 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         listsTableView.reloadData()
         UIApplication.shared.isStatusBarHidden = false
     }
@@ -155,6 +149,13 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         listsTableView.register(ListCell.self, forCellReuseIdentifier: listCellID)
     }
     
+    func checkIfListIsEmpty() {
+        if listsTableView.visibleCells.count == 0 {
+            emptyListsView.isHidden = false
+        } else {
+            emptyListsView.isHidden = true
+        }
+    }
 
     func numberOfSections(in tableView: UITableView) -> Int {
         guard let sections = controller.sections else {
@@ -207,7 +208,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let selectedVC = SelectedListVC()
+        let selectedVC = ShoppingListVC()
         let cell = listsTableView.cellForRow(at: indexPath) as! ListCell
         selectedVC.listName = cell.listName.text!
         slideTransition.transitionMode = .Present
@@ -269,11 +270,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         listsTableView.endUpdates()
-        if listsTableView.numberOfRows(inSection: 0) == 0 {
-            emptyListsView.isHidden = false
-        } else {
-            emptyListsView.isHidden = true
-        }
+        checkIfListIsEmpty()
     }
 
     
