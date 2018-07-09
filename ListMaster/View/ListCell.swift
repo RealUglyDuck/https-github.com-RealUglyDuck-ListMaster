@@ -1,10 +1,4 @@
-//
-//  ListCell.swift
-//  ListMaster
-//
-//  Created by Paweł Ambrożej on 03/12/2017.
-//  Copyright © 2017 Paweł Ambrożej. All rights reserved.
-//
+
 
 import UIKit
 
@@ -26,7 +20,7 @@ class ListCell: UITableViewCell {
         
     }()
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
         

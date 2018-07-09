@@ -19,6 +19,8 @@
 		AE6E23821FCDEEC900F2C969 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6E23811FCDEEC900F2C969 /* Page.swift */; };
 		AE6E23841FCF361B00F2C969 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6E23831FCF361B00F2C969 /* List.swift */; };
 		AE6E23861FCF362900F2C969 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6E23851FCF362900F2C969 /* Product.swift */; };
+		AE6EE30120F3D57C0061C285 /* ShoppingListVC-View.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6EE30020F3D57C0061C285 /* ShoppingListVC-View.swift */; };
+		AE6EE30320F3D5B90061C285 /* NewListVC-View.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE6EE30220F3D5B90061C285 /* NewListVC-View.swift */; };
 		AE7A147B1FE969CC00D67A84 /* NewItemVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7A147A1FE969CC00D67A84 /* NewItemVC.swift */; };
 		AEADC2FD2051860E0078E14B /* SlideTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEADC2FC2051860E0078E14B /* SlideTransition.swift */; };
 		AEB54B39203C7FC1009029CF /* UnitsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB54B38203C7FC1009029CF /* UnitsModel.swift */; };
@@ -62,6 +64,8 @@
 		AE6E23811FCDEEC900F2C969 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		AE6E23831FCF361B00F2C969 /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		AE6E23851FCF362900F2C969 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		AE6EE30020F3D57C0061C285 /* ShoppingListVC-View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingListVC-View.swift"; sourceTree = "<group>"; };
+		AE6EE30220F3D5B90061C285 /* NewListVC-View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewListVC-View.swift"; sourceTree = "<group>"; };
 		AE7A147A1FE969CC00D67A84 /* NewItemVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemVC.swift; sourceTree = "<group>"; };
 		AEADC2FC2051860E0078E14B /* SlideTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideTransition.swift; sourceTree = "<group>"; };
 		AEB54B38203C7FC1009029CF /* UnitsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitsModel.swift; sourceTree = "<group>"; };
@@ -126,6 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				AEC02E9D2024AF2A0047E77C /* MainVC-View.swift */,
+				AE6EE30220F3D5B90061C285 /* NewListVC-View.swift */,
+				AE6EE30020F3D57C0061C285 /* ShoppingListVC-View.swift */,
 				AEB54B3A203C81E6009029CF /* NewItemVC-View.swift */,
 				AEE34BB21FD4985C001ADE8B /* ListCell.swift */,
 				AEC525BD1FEB041800A66331 /* ItemCell.swift */,
@@ -244,11 +250,13 @@
 				TargetAttributes = {
 					AE68C675203F668D0070B01F = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						TestTargetID = AED00FEA1FCB62A1003DC497;
 					};
 					AED00FEA1FCB62A1003DC497 = {
 						CreatedOnToolsVersion = 9.1;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -307,6 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AED010061FCB67C3003DC497 /* Constants.swift in Sources */,
+				AE6EE30120F3D57C0061C285 /* ShoppingListVC-View.swift in Sources */,
 				AED00FF11FCB62A1003DC497 /* MainVC.swift in Sources */,
 				AEC02E9E2024AF2A0047E77C /* MainVC-View.swift in Sources */,
 				AE6E23821FCDEEC900F2C969 /* Page.swift in Sources */,
@@ -319,6 +328,7 @@
 				AED00FEF1FCB62A1003DC497 /* AppDelegate.swift in Sources */,
 				AE6920091FCF3E17005C610E /* ListMaster.xcdatamodeld in Sources */,
 				AEFE0B001FF5836C002E994B /* TableHeaderView.swift in Sources */,
+				AE6EE30320F3D5B90061C285 /* NewListVC-View.swift in Sources */,
 				AEE34BB31FD4985C001ADE8B /* ListCell.swift in Sources */,
 				AEC525BE1FEB041800A66331 /* ItemCell.swift in Sources */,
 				AE7A147B1FE969CC00D67A84 /* NewItemVC.swift in Sources */,
@@ -372,7 +382,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMasterUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ListMaster;
 			};
@@ -388,7 +398,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMasterUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ListMaster;
 			};
@@ -515,7 +525,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMaster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -530,7 +540,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMaster;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

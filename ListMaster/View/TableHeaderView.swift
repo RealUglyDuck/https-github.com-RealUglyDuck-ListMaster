@@ -12,12 +12,12 @@ class TableHeaderView: UIView {
     
     let leftTitle: StandardUILabel = {
         let title = StandardUILabel()
-        title.accessibilityTraits = UIAccessibilityTraitHeader
+        title.accessibilityTraits = UIAccessibilityTraits.header
         return title
     }()
     let rightTitle: StandardUILabel = {
         let title = StandardUILabel()
-        title.accessibilityTraits = UIAccessibilityTraitHeader
+        title.accessibilityTraits = UIAccessibilityTraits.header
         return title
     }()
     let headerView = UIView()

@@ -17,7 +17,11 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var listName:String = ""
     var productList: [Product]?
-    let listTableView = UITableView()
+    let listTableView :UITableView = {
+        let tableView = UITableView()
+        tableView.tableFooterView = UIView()
+        return tableView
+    }()
     
     let titleBG:UIView = {
         let background = UIView()
@@ -33,7 +37,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let backButton:StandardUIButton = {
         let button = StandardUIButton()
-        button.accessibilityTraits = UIAccessibilityTraitButton
+        button.accessibilityTraits = UIAccessibilityTraits.button
         button.accessibilityLabel = "Back to your lists"
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         let image = UIImage(named: "BackButton")
@@ -44,7 +48,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     let addItemButton: UIButton  = {
         let button = UIButton()
         button.setTitle("", for: .normal)
-        button.accessibilityTraits = UIAccessibilityTraitButton
+        button.accessibilityTraits = UIAccessibilityTraits.button
         button.accessibilityLabel = "Add products button"
         let backgroundImage = UIImage(named: "AddButton")
         button.setImage(backgroundImage, for: .normal)
@@ -75,7 +79,9 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             print(error)
             
         }
+        
         listTableView.reloadData()
+        
         return fetchController
     }()
     
@@ -127,6 +133,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        listTableView.reloadData()
         checkIfListIsEmpty()
     }
     
@@ -158,7 +165,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         guard let sharedImage = image else {return}
         let activeView = UIActivityViewController(activityItems: [list], applicationActivities: nil)
-        activeView.excludedActivityTypes = [UIActivityType.saveToCameraRoll]
+        activeView.excludedActivityTypes = [UIActivity.ActivityType.saveToCameraRoll]
         present(activeView, animated: true, completion: nil)
     }
     
@@ -181,10 +188,16 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+
         guard let sections = controller.sections else {
             return 0
         }
-        return sections.count
+        if sections.count == 0 {
+            return 0
+        } else {
+            return sections.count
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -216,18 +229,15 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         return UIView()
     }
     
-    
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CellName", for: indexPath) as! ItemCell
          
-        
-        let product = self.controller.object(at: indexPath)
-
-        cell.configureCell(object: product)
-        cell.selectionStyle = .none
-        cell.accessibilityLabel = "\(cell.name) \(cell.amount) \(cell.measureUnit)"
-        
+        if controller.fetchedObjects != nil {
+            let product = self.controller.object(at: indexPath)
+            cell.configureCell(object: product)
+            cell.selectionStyle = .none
+            cell.accessibilityLabel = "\(cell.name) \(cell.amount) \(cell.measureUnit)"
+        }
         return cell
     }
     
@@ -278,11 +288,11 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         listTableView.beginUpdates()
-        print("controller will change content")
+        
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        print("enter controller serttings")
+        
         switch(type) {
         case .delete :
             listTableView.deleteRows(at: [indexPath!], with: .top)
@@ -295,7 +305,6 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         case .move:
             listTableView.moveRow(at: indexPath!, to: newIndexPath!)
-            print("Object moved")
             if let cell = listTableView.cellForRow(at: indexPath!) as? ItemCell {
                 if newIndexPath?.section == 1 {
                     cell.name.textColor = SECONDARY_COLOR
@@ -346,40 +355,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         listTableView.reloadData()
     }
 
-    func setupLayout() {
-        view.backgroundColor = .white
-        view.addSubview(listTableView)
-        view.addSubview(emptyListView)
-        view.addSubview(titleBG)
-        titleBG.addSubview(backButton)
-        titleBG.addSubview(backButtonTapView)
-        titleBG.addSubview(titleLabel)
-        titleBG.addSubview(addItemButton)
-        view.addSubview(bottomBG)
-        
-        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 80, width: nil)
-        
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
-        backButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor, constant: 10).isActive = true
-        backButton.setPropertyOf(width: 20, height: 30)
-        backButtonTapView.centerInTheView(centerX: backButton.centerXAnchor, centerY: backButton.centerYAnchor)
-        backButtonTapView.setPropertyOf(width: 80, height: 50)
-        
-        addItemButton.translatesAutoresizingMaskIntoConstraints = false
-        addItemButton.setPropertyOf(width: 32, height: 32)
-        addItemButton.centerInTheView(centerX: nil, centerY: backButton.centerYAnchor)
-        addItemButton.rightAnchor.constraint(equalTo: titleBG.rightAnchor, constant: -25).isActive = true
-        
-        _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: backButton.centerYAnchor)
-        _ = listTableView.constraintsWithDistanceTo(top: titleBG.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: bottomBG.topAnchor, topDistance: 15, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
-        _ = emptyListView.constraintsWithDistanceTo(top: listTableView.topAnchor, left: listTableView.leftAnchor, right: listTableView.rightAnchor, bottom: listTableView.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
-        
-        bottomBG.constraintsTo(top: nil, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
-        bottomBG.setPropertyOf(width: nil, height: 40)
-        
-        listTableView.backgroundColor = .clear
-    }
+    
     
     func getItems() -> [Product]?{
         

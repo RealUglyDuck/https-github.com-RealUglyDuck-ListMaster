@@ -57,7 +57,7 @@ class FilledUIButton: UIButton {
     
     override var accessibilityTraits: UIAccessibilityTraits {
         get {
-            return UIAccessibilityTraitButton
+            return UIAccessibilityTraits.button
         }
         set {}
     }
@@ -102,7 +102,7 @@ class TitleUILabel: UILabel {
     
     override var accessibilityTraits: UIAccessibilityTraits{
         get{
-            return UIAccessibilityTraitHeader
+            return UIAccessibilityTraits.header
         }
         set{}
     }
@@ -124,7 +124,7 @@ class NewTextField: UITextField {
         self.leftView = paddingView
         self.leftViewMode = .always
 
-        self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white])
+        self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedString.Key.foregroundColor:UIColor.white])
         self.placeholder = ""
         
         self.layer.shadowColor = UIColor.black.cgColor
@@ -179,7 +179,7 @@ class StandardUISegmentedControl: UISegmentedControl {
         self.layer.borderColor = MAIN_COLOR.cgColor
         self.tintColor = MAIN_COLOR
         self.backgroundColor = .clear
-        self.setTitleTextAttributes([NSAttributedStringKey.foregroundColor:UIColor.white], for: .normal)
+        self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.white], for: .normal)
     }
 
     override init(items: [Any]?) {
@@ -305,7 +305,7 @@ extension UIView {
             viewsDict[viewName] = views[index]
         }
         
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDict))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDict))
     }
     
     func addGradient() {

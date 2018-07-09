@@ -142,7 +142,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     override func viewWillAppear(_ animated: Bool) {
         listsTableView.reloadData()
-        UIApplication.shared.isStatusBarHidden = false
+        
     }
     
     func registerCells() {

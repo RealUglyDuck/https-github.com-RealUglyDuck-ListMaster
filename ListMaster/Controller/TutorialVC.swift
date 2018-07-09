@@ -117,7 +117,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(TutorialViewCell.self, forCellWithReuseIdentifier: "Cell")
-        UIApplication.shared.isStatusBarHidden = true
+        
         setupViews()
     }
 

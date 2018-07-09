@@ -75,7 +75,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         button.accessibilityLabel = "Back to list"
         
-        button.accessibilityTraits = UIAccessibilityTraitButton
+        button.accessibilityTraits = UIAccessibilityTraits.button
         
         return button
         
@@ -180,9 +180,9 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         button.isAccessibilityElement = true
 
-        button.accessibilityTraits = UIAccessibilityTraitButton
+        button.accessibilityTraits = UIAccessibilityTraits.button
         
-        button.accessibilityTraits |= UIAccessibilityTraitUpdatesFrequently
+        button.accessibilityTraits = UIAccessibilityTraits.updatesFrequently
         
         button.accessibilityLabel = "Tap to increase amount. Current amount \(amountTextField.text ?? "")"
         
@@ -201,9 +201,9 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         button.isAccessibilityElement = true
         
-        button.accessibilityTraits = UIAccessibilityTraitButton
+        button.accessibilityTraits = UIAccessibilityTraits.button
         
-        button.accessibilityTraits |= UIAccessibilityTraitUpdatesFrequently
+        button.accessibilityTraits = UIAccessibilityTraits.updatesFrequently
         
         button.accessibilityLabel = "Tap to decrease amount. Current amount \(amountTextField.text ?? "")"
         
@@ -520,7 +520,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             self.addedItemPopupView.isHidden = true
         }
         
-        UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, NSLocalizedString("Product added", comment: ""))
+        UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: NSLocalizedString("Product added", comment: ""))
     }
     
     private func getListObject<T:NSManagedObject>(name:String, objectType: T)->[T]?{
