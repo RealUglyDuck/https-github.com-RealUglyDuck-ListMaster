@@ -15,6 +15,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     var pages = [Page]()
     var nextButtonConstraints = [NSLayoutConstraint]()
     var skipButtonConstraints = [NSLayoutConstraint]()
+    var carouselAccessibilityElement: CarouselAccessibilityElement?
     
     let skipButton: StandardUIButton = {
         let button = StandardUIButton()
@@ -25,11 +26,14 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         button.titleLabel?.font = fontMetrics.scaledFont(for: font!)
         button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
+        button.accessibilityElementsHidden = true
         return button
     }()
     
     @objc func skipButtonPressed() {
         if !isRootViewController {
+            skipButton.isHidden = true
+            nextButton.isHidden = true
             dismiss(animated: true, completion: nil)
         } else {
             let vc = MainVC()
@@ -48,14 +52,17 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         button.titleLabel?.font = fontMetrics.scaledFont(for: font!)
         button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(nextButtonPressed), for: .touchUpInside)
+        button.accessibilityElementsHidden = true
         return button
     }()
     
     @objc func nextButtonPressed() {
         
-        if pageControl.currentPage == pages.count-1{
+        let pagesCount = PagesData.instance.generateData().count
+        
+        if pageControl.currentPage == pagesCount - 1{
             return
-        } else if pageControl.currentPage == pages.count - 2 {
+        } else if pageControl.currentPage == pagesCount - 2 {
             hideNextButton()
         }
         
@@ -66,9 +73,11 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         
         let currentPage = IndexPath(item: pageControl.currentPage+1, section: 0)
         collectionView.scrollToItem(at: currentPage, at: .centeredHorizontally, animated: true)
+        self.view.setNeedsFocusUpdate()
+        
         pageControl.currentPage += 1
         
-
+        UIAccessibility.post(notification: UIAccessibility.Notification.layoutChanged, argument: nil)
     }
     
     func hideNextButton() {
@@ -99,33 +108,44 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.isPagingEnabled = true
         cv.backgroundColor = .white
+        cv.accessibilityTraits = UIAccessibilityTraits.adjustable
+        cv.allowsSelection = false
+        cv.remembersLastFocusedIndexPath = true
         return cv
     }()
+
+    override func accessibilityIncrement() {
+        nextButtonPressed()
+    }
     
     lazy var pageControl: UIPageControl = {
         let pc = UIPageControl()
+        let pagesCount = PagesData.instance.generateData().count
         pc.pageIndicatorTintColor = MAIN_COLOR
         pc.currentPageIndicatorTintColor = SECONDARY_COLOR
-        pc.numberOfPages = pages.count
+        pc.numberOfPages = pagesCount
+        pc.isAccessibilityElement = false
         return pc
     }()
     
+    // #MARK: ------- LIFECYCLE --------
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        generateData()
+//        generateData()
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(TutorialViewCell.self, forCellWithReuseIdentifier: "Cell")
-        
         setupViews()
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pages.count
+        let pagesCount = PagesData.instance.generateData().count
+        return pagesCount
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let pagesCount = PagesData.instance.generateData().count
         if let cell = cell as? TutorialViewCell {
             if indexPath.item == 0 {
                 cell.headerBG.isHidden = false
@@ -134,7 +154,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
                 cell.headerBG.image = UIImage(named: "Logo")
                 cell.headerBG.backgroundColor = BACKGROUND_COLOR
                 cell.startButton.isHidden = true
-            } else if indexPath.item == pages.count-1 {
+            } else if indexPath.item == pagesCount-1 {
                 cell.headerBG.isHidden = true
                 cell.separator.isHidden = true
                 cell.textView.isHidden = true
@@ -154,7 +174,9 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TutorialViewCell
+        let pages = PagesData.instance.generateData()
         cell.configureCell(page: pages[indexPath.item])
+//        cell.isAccessibilityElement = true
         return cell
     }
     
@@ -168,13 +190,13 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         let pageNumber = Int(targetContentOffset.pointee.x / view.frame.width)
         pageControl.currentPage = pageNumber
         
+        let pagesCount = PagesData.instance.generateData().count
         
-        
-        if pageControl.currentPage == pages.count-1 {
+        if pageControl.currentPage == pagesCount-1 {
             hideNextButton()
         }
         
-        if pageControl.currentPage == pages.count-2 {
+        if pageControl.currentPage == pagesCount-2 {
             showNextButton()
         }
         
@@ -214,15 +236,52 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         pageControl.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
     }
     
-    func generateData() {
-        let page = Page(title: "Thank you for choosing ListMaster", description: "Please take this quick survey to learn how to use our app.", imageName: "")
-        let page1 = Page(title: "Manage your Lists", description: "Press \"+\" button to create new List.\nClick on the list name to see the products", imageName: "TutorImage1")
-        let page2 = Page(title: "Manage your Products", description: "Tap the product name to move it to basket.\nSwipe left to remove product from the list", imageName: "TutorialImage2")
-        let page3 = Page(title: "Add products to your lists", description: "To add new product: write the name, choose the amount and measure unit", imageName: "TutorialImage3")
-        let page4 = Page(title: "", description: "", imageName: "")
-        pages += [page,page1,page2,page3,page4]
-    }
-
-
+//    func generateData() {
+//        let page = Page(title: "Thank you for choosing Trolleyst", description: "Please take this quick survey to learn how to use our app.", imageName: "")
+//        let page1 = Page(title: "Manage your Lists", description: "Press \"+\" button to create new List.\nClick on the list name to open the list", imageName: "TutorImage1")
+//        let page2 = Page(title: "Manage your Products", description: "Tap the product name to move it to basket.\nSwipe left to remove product from the list", imageName: "TutorialImage2")
+//        let page3 = Page(title: "Add products to your lists", description: "To add new product: write the name, choose the amount and measure unit", imageName: "TutorialImage3")
+//        let page4 = Page(title: "", description: "", imageName: "")
+//        pages += [page,page1,page2,page3,page4]
+//    }
     
+}
+
+class CarouselAccessibilityElement: UIAccessibilityElement {
+    
+    var currentPage: Page?
+    
+    init(accessibilityContainer container: Any, page: Page?) {
+        super.init(accessibilityContainer: container)
+        currentPage = page
+        
+    }
+    
+    override var accessibilityLabel: String? {
+        get {
+            return "Tutorial Page"
+        }
+        set {}
+    }
+    
+    override var accessibilityValue: String? {
+        get {
+            if let title = currentPage?.title, let description = currentPage?.description {
+                return title + description
+            } else {
+                return super.accessibilityValue
+            }
+            
+        }
+        set {}
+    }
+    
+    override var accessibilityTraits: UIAccessibilityTraits {
+        get {
+            return UIAccessibilityTraits.adjustable
+        }
+        set {
+            
+        }
+    }
 }

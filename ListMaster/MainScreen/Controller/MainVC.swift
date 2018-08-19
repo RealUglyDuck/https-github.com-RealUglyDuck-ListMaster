@@ -21,16 +21,23 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     
     let listsTableView = UITableView()
     
-    let infoTapView = UIButton()
+    let infoTapView : UIButton = {
+        let button = UIButton()
+        button.isAccessibilityElement = true
+        button.accessibilityTraits = UIAccessibilityTraits.button
+        button.accessibilityLabel = "Instruction how to use Trolleyst"
+        return button
+    }()
     
-    let infoIcon:UIImageView = {
+    let infoButton:UIImageView = {
         let icon = UIImageView()
         icon.image = UIImage(named: "InfoIcon")
+        icon.isAccessibilityElement = false
         return icon
     }()
     
     @objc func infoButtonPressed() {
-        print("Info button pressed")
+        
         let tutorialVC = TutorialVC()
         tutorialVC.isRootViewController = false
         present(tutorialVC, animated: true, completion: nil)
@@ -76,6 +83,8 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         let backgroundImage = UIImage(named: "AddButton")
         button.setImage(backgroundImage, for: .normal)
         button.addTarget(self, action: #selector(addNewItemPressed), for: .touchUpInside)
+        button.accessibilityLabel = "Add new list"
+        button.accessibilityTraits = .button
         //        button.target(forAction: #selector(addNewItem), withSender: self)
         return button
     }()
@@ -239,6 +248,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         
         cell.configureCell(object: list)
         cell.selectionStyle = .none
+        
         
         return cell
     }

@@ -61,30 +61,41 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
     }()
     
-    let backButtonTapView = UIView()
-    
-    let backButton:StandardUIButton = {
+    let backButtonTapButton: UIButton = {
         
-        let button = StandardUIButton()
+        let button = UIButton()
         
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        
-        let image = UIImage(named: "BackButton")
-        
-        button.setBackgroundImage(image, for: .normal)
         
         button.accessibilityLabel = "Back to list"
         
         button.accessibilityTraits = UIAccessibilityTraits.button
         
         return button
+    }()
+    
+    let backButton:StandardUIButton = {
+        
+        let button = StandardUIButton()
+        
+        let image = UIImage(named: "BackButton")
+        
+        button.setBackgroundImage(image, for: .normal)
+        
+        button.isAccessibilityElement = false
+        
+        return button
         
     }()
     
     @objc func backButtonPressed() {
+        
         let slideTransition = SlideTransition()
+        
         slideTransition.transitionMode = .Dismiss
+        
         self.transitioningDelegate = slideTransition
+        
         dismissKeyboard()
         dismiss(animated: true, completion: nil)
     }
@@ -238,6 +249,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
             amountTextField.text = String(currentAmount)
             
             plusButton.accessibilityLabel = "Tap to increase amount. Current amount \(currentAmount)"
+            
             minusButton.accessibilityLabel = "Tap to decrease amount. Current amount \(currentAmount)"
             
         }
@@ -334,7 +346,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         let backButtonTap = UITapGestureRecognizer(target: self, action: #selector(backButtonPressed))
         plusButton.addGestureRecognizer(plusTapRecognizer)
         minusButton.addGestureRecognizer(minusTapRecognizer)
-        backButtonTapView.addGestureRecognizer(backButtonTap)
+        backButtonTapButton.addGestureRecognizer(backButtonTap)
     }
     
     func prepareUnitButtons() {

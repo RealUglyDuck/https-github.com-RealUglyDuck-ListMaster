@@ -28,6 +28,7 @@ class TutorialViewCell: UICollectionViewCell {
         textView.textAlignment = .center
         textView.contentInset = UIEdgeInsets(top: 24, left: 0, bottom: 0, right: 0)
         textView.isEditable = false
+        textView.isAccessibilityElement = true
         return textView
     }()
     
@@ -42,12 +43,15 @@ class TutorialViewCell: UICollectionViewCell {
         let button = FilledUIButton()
         button.setTitle("Get Started", for: .normal)
         button.isHidden = true
+        button.isAccessibilityElement = true
+        button.accessibilityTraits = .button
         return button
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -69,7 +73,6 @@ class TutorialViewCell: UICollectionViewCell {
             headerBG.layer.shadowOffset = CGSize(width: 0, height: 5)
             headerBG.layer.shadowRadius = 5
         }
-        
     }
     
     func setupViews() {
@@ -101,9 +104,15 @@ class TutorialViewCell: UICollectionViewCell {
 //        descMetricsFont.scaledFont(for: descFont!)
         let titleColor = UIColor(red: 57/255, green: 57/255, blue: 57/255, alpha: 1)
         let descColor = UIColor(red: 97/255, green: 97/255, blue: 97/255, alpha: 1)
-        let attributedString = NSMutableAttributedString(string: title, attributes: [NSAttributedString.Key.font:titleMetricsFont.scaledFont(for: titleFont!),NSAttributedString.Key.foregroundColor:titleColor])
+        let attributedString = NSMutableAttributedString(
+            string: title,
+            attributes: [NSAttributedString.Key.font:titleMetricsFont.scaledFont(for: titleFont!),
+                         NSAttributedString.Key.foregroundColor:titleColor])
         
-        attributedString.append(NSAttributedString(string: "\n\n\(description)", attributes: [NSAttributedString.Key.font:descMetricsFont.scaledFont(for: descFont!),NSAttributedString.Key.foregroundColor:descColor]))
+        attributedString.append(NSAttributedString(
+            string: "\n\n\(description)",
+            attributes: [NSAttributedString.Key.font:descMetricsFont.scaledFont(for: descFont!),
+                         NSAttributedString.Key.foregroundColor:descColor]))
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center

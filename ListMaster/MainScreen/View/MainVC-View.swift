@@ -21,7 +21,7 @@ extension MainVC {
         topView.addSubview(logo)
         view.addSubview(addItemButton)
         listsTableView.backgroundColor = .clear
-        topView.addSubview(infoIcon)
+        topView.addSubview(infoButton)
         topView.addSubview(infoTapView)
         view.addSubview(emptyListsView)
         
@@ -29,9 +29,9 @@ extension MainVC {
         
         topViewConstraints = topView.constraintsWithDistanceTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
         
-        _ = infoIcon.constraintAnchors(top: topView.topAnchor, left: nil, right: topView.rightAnchor, bottom: nil, topDistance: 10, leftDistance:0 , rightDistance: 10, bottomDistance: 0, height: 32, width: 32)
-        infoTapView.centerInTheView(centerX: infoIcon.centerXAnchor, centerY: infoIcon.centerYAnchor)
-        infoTapView.setPropertyOf(width: 50, height: 50)
+        _ = infoButton.constraintAnchors(top: topView.topAnchor, left: nil, right: topView.rightAnchor, bottom: nil, topDistance: 10, leftDistance:0 , rightDistance: 10, bottomDistance: 0, height: 32, width: 32)
+        infoTapView.centerInTheView(centerX: infoButton.centerXAnchor, centerY: infoButton.centerYAnchor)
+        infoTapView.setPropertyOf(width: 100 , height: 100)
 
         
         logo.centerInTheView(centerX: topView.centerXAnchor, centerY: topView.centerYAnchor)

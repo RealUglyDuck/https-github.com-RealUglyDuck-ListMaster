@@ -15,7 +15,7 @@ class StandardUIButton: UIButton {
         let font = UIFont(name: "HelveticaNeue-Light", size: 16)
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         self.titleLabel?.font = fontMetrics.scaledFont(for: font!)
-
+        self.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -36,7 +36,7 @@ class FilledUIButton: UIButton {
         self.layer.shadowOpacity = 0.2
         self.layer.shadowOffset = CGSize(width: 5, height: 5)
         self.layer.shadowRadius = 5
-        
+        self.titleLabel?.adjustsFontForContentSizeCategory = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -90,6 +90,7 @@ class TitleUILabel: UILabel {
 //        self.font = UIFont(name: "HelveticaNeue-Medium", size: 20)
         self.textColor = .white
         self.textAlignment = .center
+        self.adjustsFontForContentSizeCategory = true
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -219,7 +220,6 @@ extension UIView {
         let constraints = constraintsWithDistanceTo(top: top, left: left, right: right, bottom: bottom, topDistance: topDistance, leftDistance: leftDistance, rightDistance: rightDistance, bottomDistance: bottomDistance)
         
         setPropertyOf(width: width, height: height)
-//        var propertyDictionary:Dictionary<String,NSLayoutConstraint> = [:]
         
         return constraints
         
@@ -228,7 +228,7 @@ extension UIView {
     func constraintsTo(top:NSLayoutYAxisAnchor?, left:NSLayoutXAxisAnchor?, right:NSLayoutXAxisAnchor?, bottom:NSLayoutYAxisAnchor?) {
         
         _ = self.constraintsWithDistanceTo(top: top, left: left, right: right, bottom: bottom, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
-        
+    
     }
     
     func constraintsWithDistanceTo(top:NSLayoutYAxisAnchor?,  left:NSLayoutXAxisAnchor?, right:NSLayoutXAxisAnchor?, bottom:NSLayoutYAxisAnchor?, topDistance: CGFloat, leftDistance: CGFloat, rightDistance: CGFloat, bottomDistance: CGFloat)->[NSLayoutConstraint]{
@@ -319,3 +319,5 @@ extension UIView {
     
 
 }
+
+

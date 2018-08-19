@@ -16,7 +16,7 @@ extension NewItemVC{
         predictionTableView.separatorColor = .clear
         view.addSubview(titleBG)
         titleBG.addSubview(backButton)
-        titleBG.addSubview(backButtonTapView)
+        titleBG.addSubview(backButtonTapButton)
         titleBG.addSubview(titleLabel)
         view.addSubview(mainStack)
         mainStack.addArrangedSubview(itemNameTextField)
@@ -45,8 +45,8 @@ extension NewItemVC{
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true
         backButton.centerYAnchor.constraint(equalTo: titleBG.centerYAnchor, constant: 0).isActive = true
         backButton.setPropertyOf(width: 20, height: 30)
-        backButtonTapView.centerInTheView(centerX: backButton.centerXAnchor, centerY: backButton.centerYAnchor)
-        backButtonTapView.setPropertyOf(width: 80, height: 50)
+        backButtonTapButton.centerInTheView(centerX: backButton.centerXAnchor, centerY: backButton.centerYAnchor)
+        backButtonTapButton.setPropertyOf(width: 80, height: 50)
         
         _ = titleLabel.centerInTheView(centerX: titleBG.centerXAnchor, centerY: backButton.centerYAnchor)
         

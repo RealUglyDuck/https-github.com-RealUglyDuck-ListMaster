@@ -33,26 +33,35 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         return background
     }()
     
-    let backButtonTapView = UIView()
-    
-    let backButton:StandardUIButton = {
-        let button = StandardUIButton()
+    let backButtonTapButton: UIButton = {
+        let button = UIButton()
         button.accessibilityTraits = UIAccessibilityTraits.button
         button.accessibilityLabel = "Back to your lists"
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        return button
+    }()
+    
+    let backButton:StandardUIButton = {
+        let button = StandardUIButton()
+        button.isAccessibilityElement = false
         let image = UIImage(named: "BackButton")
         button.setBackgroundImage(image, for: .normal)
         return button
     }()
     
-    let addItemButton: UIButton  = {
+    let addItemTapButton: UIButton = {
         let button = UIButton()
-        button.setTitle("", for: .normal)
         button.accessibilityTraits = UIAccessibilityTraits.button
         button.accessibilityLabel = "Add products button"
+        button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
+        return button
+    }()
+    
+    let addItemButton: UIButton  = {
+        let button = UIButton()
         let backgroundImage = UIImage(named: "AddButton")
         button.setImage(backgroundImage, for: .normal)
-        button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
+        button.isAccessibilityElement = false
         return button
     }()
     
@@ -105,12 +114,12 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         let background = UIView()
         let button = StandardUIButton()
         button.setTitle("Share List", for: .normal)
-        button.addTarget(self, action: #selector(handleSharing), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(handleSharing), for: .touchUpInside)
         button.titleLabel?.font = UIFont(name: "HelveticaNeue-medium", size: 16)
         background.backgroundColor = BACKGROUND_COLOR
-        background.addSubview(button)
-        button.centerInTheView(centerX: nil, centerY: background.centerYAnchor)
-        button.rightAnchor.constraint(equalTo: background.rightAnchor, constant: -20).isActive = true
+//        background.addSubview(button)
+//        button.centerInTheView(centerX: nil, centerY: background.centerYAnchor)
+//        button.rightAnchor.constraint(equalTo: background.rightAnchor, constant: -20).isActive = true
         return background
     }()
     
@@ -128,7 +137,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         listTableView.reloadData()
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(backButtonPressed))
-        backButtonTapView.addGestureRecognizer(tap)
+        backButtonTapButton.addGestureRecognizer(tap)
 
     }
     
@@ -142,32 +151,32 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         listTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     }
     
-    @objc func handleSharing() {
-        
-        let list = generateListString()
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: listTableView.contentSize.width, height: listTableView.contentSize.height),false, 0)
-        
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return
-        }
-        
-        let previousFrame = listTableView.frame
-        
-        listTableView.frame = CGRect(x: listTableView.frame.origin.x, y: listTableView.frame.origin.y, width: listTableView.contentSize.width, height: listTableView.contentSize.height)
-        
-        
-        listTableView.layer.render(in: context)
-        
-        listTableView.frame = previousFrame
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext();
-        
-        guard let sharedImage = image else {return}
-        let activeView = UIActivityViewController(activityItems: [list], applicationActivities: nil)
-        activeView.excludedActivityTypes = [UIActivity.ActivityType.saveToCameraRoll]
-        present(activeView, animated: true, completion: nil)
-    }
+//    @objc func handleSharing() {
+//
+//        let list = generateListString()
+//        UIGraphicsBeginImageContextWithOptions(CGSize(width: listTableView.contentSize.width, height: listTableView.contentSize.height),false, 0)
+//
+//        guard let context = UIGraphicsGetCurrentContext() else {
+//            return
+//        }
+//
+//        let previousFrame = listTableView.frame
+//
+//        listTableView.frame = CGRect(x: listTableView.frame.origin.x, y: listTableView.frame.origin.y, width: listTableView.contentSize.width, height: listTableView.contentSize.height)
+//
+//
+//        listTableView.layer.render(in: context)
+//
+//        listTableView.frame = previousFrame
+//
+//        let image = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext();
+//
+//        guard let sharedImage = image else {return}
+//        let activeView = UIActivityViewController(activityItems: [list], applicationActivities: nil)
+//        activeView.excludedActivityTypes = [UIActivity.ActivityType.saveToCameraRoll]
+//        present(activeView, animated: true, completion: nil)
+//    }
     
     func checkIfListIsEmpty() {
         if listTableView.visibleCells.count == 0  {
@@ -236,7 +245,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
             let product = self.controller.object(at: indexPath)
             cell.configureCell(object: product)
             cell.selectionStyle = .none
-            cell.accessibilityLabel = "\(cell.name) \(cell.amount) \(cell.measureUnit)"
+//            cell.accessibilityLabel = "\(cell.name) \(cell.amount) \(cell.measureUnit)"
         }
         return cell
     }

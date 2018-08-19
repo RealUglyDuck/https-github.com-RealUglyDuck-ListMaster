@@ -33,6 +33,7 @@ class EmptyListView: UIView {
         label.attributedText = attributedText
         label.textColor = MAIN_COLOR
         addSubview(label)
+        label.adjustsFontForContentSizeCategory = true
         label.centerInTheView(centerX: centerXAnchor, centerY: centerYAnchor)
         _ = label.constraintsWithDistanceTo(top: topAnchor, left: leftAnchor, right: rightAnchor, bottom: bottomAnchor, topDistance: 20, leftDistance: 20, rightDistance: 20, bottomDistance: 20)
         label.textAlignment = .center
