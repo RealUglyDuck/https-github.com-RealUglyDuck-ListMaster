@@ -39,7 +39,7 @@ extension NewItemVC{
         addedItemPopupView.centerInTheView(centerX: view.centerXAnchor, centerY: nil)
         addedItemPopupView.setPropertyOf(width: 200, height: 150)
         addedItemPopupView.isHidden = true
-        _ = titleBG.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 80, width: nil)
+        _ = titleBG.constraintAnchors(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: nil, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0, height: 80, width: nil)
         
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.leftAnchor.constraint(equalTo: titleBG.leftAnchor, constant: 25).isActive = true

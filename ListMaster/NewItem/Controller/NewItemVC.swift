@@ -110,6 +110,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
     }()
     
+    
     let mainStack: UIStackView = {
         
         let stackView = UIStackView()

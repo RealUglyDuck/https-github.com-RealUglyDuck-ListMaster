@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let defaults = UserDefaults.standard
 //        defaults.set(nil, forKey: "isFirstTime")
-        if defaults.object(forKey: "isFirstTime") == nil || UIAccessibility.isVoiceOverRunning == false {
+        if defaults.object(forKey: "isFirstTime") == nil {
             defaults.set("No", forKey: "isFirstTime")
             defaults.synchronize()
             window?.rootViewController = TutorialVC()

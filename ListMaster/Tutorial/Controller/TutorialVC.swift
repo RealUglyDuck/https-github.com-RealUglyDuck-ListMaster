@@ -15,7 +15,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     var pages = [Page]()
     var nextButtonConstraints = [NSLayoutConstraint]()
     var skipButtonConstraints = [NSLayoutConstraint]()
-    var carouselAccessibilityElement: CarouselAccessibilityElement?
+//    var carouselAccessibilityElement: CarouselAccessibilityElement?
     
     let skipButton: StandardUIButton = {
         let button = StandardUIButton()
@@ -154,14 +154,6 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
                 cell.textView.isHidden = false
                 cell.headerBG.image = UIImage(named: "Logo")
                 cell.headerBG.backgroundColor = BACKGROUND_COLOR
-                
-//            } else if indexPath.item == pagesCount-1 {
-//                cell.headerBG.isHidden = true
-//                cell.separator.isHidden = true
-//                cell.textView.isHidden = true
-//                cell.headerBG.backgroundColor = .white
-//                cell.startButton.isHidden = false
-//                cell.startButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
             } else {
                 cell.headerBG.backgroundColor = .white
                 cell.headerBG.isHidden = false
@@ -191,8 +183,6 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         }
 
     }
-    
-
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: view.frame.width, height: view.frame.height)
@@ -241,59 +231,50 @@ UIAccessibility.post(notification: UIAccessibility.Notification.layoutChanged, a
         
         collectionView.constraintsTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor)
         
-        skipButtonConstraints = skipButton.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: nil, bottom: nil, topDistance: 5, leftDistance: 15, rightDistance: 0, bottomDistance: 0, height: 30, width: 100)
+        skipButtonConstraints = skipButton.constraintAnchors(top: view.topAnchor, left: view.leftAnchor, right: nil, bottom: nil, topDistance: 5, leftDistance: 25, rightDistance: 0, bottomDistance: 0, height: 30, width: 100)
         
-        nextButtonConstraints = nextButton.constraintAnchors(top: view.topAnchor, left: nil, right: view.rightAnchor, bottom: nil, topDistance: 5, leftDistance: 0, rightDistance: 15, bottomDistance: 0, height: 30, width: 100)
+        nextButtonConstraints = nextButton.constraintAnchors(top: view.topAnchor, left: nil, right: view.rightAnchor, bottom: nil, topDistance: 5, leftDistance: 0, rightDistance: 25, bottomDistance: 0, height: 30, width: 100)
         pageControl.centerInTheView(centerX: view.centerXAnchor, centerY: nil)
         pageControl.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
     }
     
-//    func generateData() {
-//        let page = Page(title: "Thank you for choosing Trolleyst", description: "Please take this quick survey to learn how to use our app.", imageName: "")
-//        let page1 = Page(title: "Manage your Lists", description: "Press \"+\" button to create new List.\nClick on the list name to open the list", imageName: "TutorImage1")
-//        let page2 = Page(title: "Manage your Products", description: "Tap the product name to move it to basket.\nSwipe left to remove product from the list", imageName: "TutorialImage2")
-//        let page3 = Page(title: "Add products to your lists", description: "To add new product: write the name, choose the amount and measure unit", imageName: "TutorialImage3")
-//        let page4 = Page(title: "", description: "", imageName: "")
-//        pages += [page,page1,page2,page3,page4]
+}
+//
+//class CarouselAccessibilityElement: UIAccessibilityElement {
+//
+//    var currentPage: Page?
+//
+//    init(accessibilityContainer container: Any, page: Page?) {
+//        super.init(accessibilityContainer: container)
+//        currentPage = page
+//
 //    }
-    
-}
-
-class CarouselAccessibilityElement: UIAccessibilityElement {
-    
-    var currentPage: Page?
-    
-    init(accessibilityContainer container: Any, page: Page?) {
-        super.init(accessibilityContainer: container)
-        currentPage = page
-        
-    }
-    
-    override var accessibilityLabel: String? {
-        get {
-            return "Tutorial Page"
-        }
-        set {}
-    }
-    
-    override var accessibilityValue: String? {
-        get {
-            if let title = currentPage?.title, let description = currentPage?.description {
-                return title + description
-            } else {
-                return super.accessibilityValue
-            }
-            
-        }
-        set {}
-    }
-    
-    override var accessibilityTraits: UIAccessibilityTraits {
-        get {
-            return UIAccessibilityTraits.adjustable
-        }
-        set {
-            
-        }
-    }
-}
+//
+//    override var accessibilityLabel: String? {
+//        get {
+//            return "Tutorial Page"
+//        }
+//        set {}
+//    }
+//
+//    override var accessibilityValue: String? {
+//        get {
+//            if let title = currentPage?.title, let description = currentPage?.description {
+//                return title + description
+//            } else {
+//                return super.accessibilityValue
+//            }
+//
+//        }
+//        set {}
+//    }
+//
+//    override var accessibilityTraits: UIAccessibilityTraits {
+//        get {
+//            return UIAccessibilityTraits.adjustable
+//        }
+//        set {
+//
+//        }
+//    }
+//}

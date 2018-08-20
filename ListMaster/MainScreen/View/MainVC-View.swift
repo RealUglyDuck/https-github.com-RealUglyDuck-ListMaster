@@ -27,7 +27,7 @@ extension MainVC {
         
         let height = (view.bounds.height/2)-50
         
-        topViewConstraints = topView.constraintsWithDistanceTo(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
+        topViewConstraints = topView.constraintsWithDistanceTo(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, bottom: view.bottomAnchor, topDistance: 0, leftDistance: 0, rightDistance: 0, bottomDistance: 0)
         
         _ = infoButton.constraintAnchors(top: topView.topAnchor, left: nil, right: topView.rightAnchor, bottom: nil, topDistance: 10, leftDistance:0 , rightDistance: 10, bottomDistance: 0, height: 32, width: 32)
         infoTapView.centerInTheView(centerX: infoButton.centerXAnchor, centerY: infoButton.centerYAnchor)

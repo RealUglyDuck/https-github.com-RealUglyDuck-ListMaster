@@ -31,7 +31,7 @@ class GetStartedCell: UICollectionViewCell {
     func setupViews() {
         addSubview(startButton)
         startButton.centerInTheView(centerX: centerXAnchor, centerY: centerYAnchor)
-        startButton.setPropertyOf(width: 200, height: 50)
+        startButton.setPropertyOf(width: 250, height: 50)
     }
     
 }
