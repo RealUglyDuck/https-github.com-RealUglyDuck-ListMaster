@@ -10,4 +10,28 @@ import UIKit
 
 class GetStartedCell: UICollectionViewCell {
     
+    let startButton: FilledUIButton = {
+        let button = FilledUIButton()
+        button.setTitle("Get Started", for: .normal)
+        button.isHidden = true
+        button.isAccessibilityElement = true
+        button.accessibilityTraits = .button
+        return button
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupViews() {
+        addSubview(startButton)
+        startButton.centerInTheView(centerX: centerXAnchor, centerY: centerYAnchor)
+        startButton.setPropertyOf(width: 200, height: 50)
+    }
+    
 }

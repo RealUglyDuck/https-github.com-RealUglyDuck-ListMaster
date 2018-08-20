@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class NewListVC: UIViewController, UIGestureRecognizerDelegate {
+class NewListVC: UIViewController, UIGestureRecognizerDelegate, UITextFieldDelegate {
 
     let ad = UIApplication.shared.delegate as! AppDelegate
     lazy var context = ad.persistentContainer.viewContext
@@ -48,6 +48,7 @@ class NewListVC: UIViewController, UIGestureRecognizerDelegate {
         let cb = FilledUIButton()
         cb.setTitle("Create", for: .normal)
         cb.addTarget(self, action: #selector(createButtonPressed), for: .touchUpInside)
+
         return cb
     }()
     
@@ -78,8 +79,14 @@ class NewListVC: UIViewController, UIGestureRecognizerDelegate {
         tap.delegate = self
         closeButtonTapView.addGestureRecognizer(tap)
         listNameTextField.becomeFirstResponder()
+        listNameTextField.delegate = self
 //        let tapBackground = UIGestureRecognizer(target: self, action: #selector(closeButtonPressed))
         view.addGestureRecognizer(tap)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        listNameTextField.resignFirstResponder()
+        return true
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {

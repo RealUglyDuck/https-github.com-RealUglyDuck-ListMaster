@@ -76,7 +76,7 @@
 		AEB54B3A203C81E6009029CF /* NewItemVC-View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NewItemVC-View.swift"; sourceTree = "<group>"; };
 		AEC02E9D2024AF2A0047E77C /* MainVC-View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainVC-View.swift"; sourceTree = "<group>"; };
 		AEC525BD1FEB041800A66331 /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
-		AED00FEB1FCB62A1003DC497 /* ListMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ListMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AED00FEB1FCB62A1003DC497 /* Troleyst.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Troleyst.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AED00FEE1FCB62A1003DC497 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AED00FF01FCB62A1003DC497 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		AED00FF31FCB62A1003DC497 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -341,7 +341,7 @@
 		AED00FEC1FCB62A1003DC497 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AED00FEB1FCB62A1003DC497 /* ListMaster.app */,
+				AED00FEB1FCB62A1003DC497 /* Troleyst.app */,
 				AE68C676203F668D0070B01F /* ListMasterUITests.xctest */,
 			);
 			name = Products;
@@ -401,7 +401,7 @@
 			);
 			name = ListMaster;
 			productName = ListMaster;
-			productReference = AED00FEB1FCB62A1003DC497 /* ListMaster.app */;
+			productReference = AED00FEB1FCB62A1003DC497 /* Troleyst.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -692,7 +692,7 @@
 				INFOPLIST_FILE = ListMaster/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMaster;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Troleyst;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -707,7 +707,7 @@
 				INFOPLIST_FILE = ListMaster/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMaster;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Troleyst;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -305,6 +305,8 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
     
     let predictionTableView = UITableView()
     
+    // #MARK: ---------- LIFECYCLE --------------
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareUnitButtons()
@@ -347,6 +349,12 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         plusButton.addGestureRecognizer(plusTapRecognizer)
         minusButton.addGestureRecognizer(minusTapRecognizer)
         backButtonTapButton.addGestureRecognizer(backButtonTap)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        
+        return true
     }
     
     func prepareUnitButtons() {

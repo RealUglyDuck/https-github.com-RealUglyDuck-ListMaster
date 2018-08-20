@@ -52,6 +52,7 @@ class TutorialViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setupViews()
         
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

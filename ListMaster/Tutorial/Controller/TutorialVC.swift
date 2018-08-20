@@ -136,6 +136,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(TutorialViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView.register(GetStartedCell.self, forCellWithReuseIdentifier: "GetStartedCell")
         setupViews()
     }
 
@@ -145,7 +146,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let pagesCount = PagesData.instance.generateData().count
+        
         if let cell = cell as? TutorialViewCell {
             if indexPath.item == 0 {
                 cell.headerBG.isHidden = false
@@ -153,31 +154,42 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
                 cell.textView.isHidden = false
                 cell.headerBG.image = UIImage(named: "Logo")
                 cell.headerBG.backgroundColor = BACKGROUND_COLOR
-                cell.startButton.isHidden = true
-            } else if indexPath.item == pagesCount-1 {
-                cell.headerBG.isHidden = true
-                cell.separator.isHidden = true
-                cell.textView.isHidden = true
-                cell.headerBG.backgroundColor = .white
-                cell.startButton.isHidden = false
-                cell.startButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
+                
+//            } else if indexPath.item == pagesCount-1 {
+//                cell.headerBG.isHidden = true
+//                cell.separator.isHidden = true
+//                cell.textView.isHidden = true
+//                cell.headerBG.backgroundColor = .white
+//                cell.startButton.isHidden = false
+//                cell.startButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
             } else {
                 cell.headerBG.backgroundColor = .white
                 cell.headerBG.isHidden = false
                 cell.separator.isHidden = false
                 cell.textView.isHidden = false
-                cell.startButton.isHidden = true
+                
             }
         }
+        if let cell = cell as? GetStartedCell {
+            cell.startButton.isHidden = false
+            cell.startButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
+        }
+        
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TutorialViewCell
-        let pages = PagesData.instance.generateData()
-        cell.configureCell(page: pages[indexPath.item])
-//        cell.isAccessibilityElement = true
-        return cell
+        if indexPath[1] < PagesData.instance.generateData().count - 1 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! TutorialViewCell
+            let pages = PagesData.instance.generateData()
+            cell.configureCell(page: pages[indexPath.item])
+            //        cell.isAccessibilityElement = true
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GetStartedCell", for: indexPath) as! GetStartedCell
+            return cell
+        }
+
     }
     
 
@@ -217,7 +229,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
                 self.view.layoutIfNeeded()
             }, completion: nil)
         }
-
+UIAccessibility.post(notification: UIAccessibility.Notification.layoutChanged, argument: nil)
         
     }
     

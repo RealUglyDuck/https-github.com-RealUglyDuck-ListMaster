@@ -194,7 +194,6 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         
         let headerView = UITableViewHeaderFooterView()
         let header = TableHeaderView(leftTitle: "Name", rightTitle: "Created")
-        
         headerView.addSubview(header)
         header.constraintsTo(top: headerView.topAnchor, left: headerView.leftAnchor, right: headerView.rightAnchor, bottom: headerView.bottomAnchor)
         let head = UIView()
