@@ -446,7 +446,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         } else {
             
             let capitalized = itemNameTextField.text!.capitalized
-            print(capitalized)
+            
             predictionDataFiltered = predictionData.filter({$0.range(of: capitalized) != nil  })
             predictionTableView.reloadData()
             if predictionTableView.numberOfRows(inSection: 0) == 0 {
