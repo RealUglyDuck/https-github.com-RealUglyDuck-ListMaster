@@ -427,7 +427,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AED00FE61FCB62A1003DC497 /* Build configuration list for PBXProject "ListMaster" */;
+			buildConfigurationList = AED00FE61FCB62A1003DC497 /* Build configuration list for PBXProject "Trolleyst" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -691,10 +691,10 @@
 				DEVELOPMENT_TEAM = 7633FB6D49;
 				INFOPLIST_FILE = ListMaster/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMaster;
+				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.Trolleyst;
 				PRODUCT_NAME = Trolleyst;
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -706,10 +706,10 @@
 				DEVELOPMENT_TEAM = 7633FB6D49;
 				INFOPLIST_FILE = ListMaster/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.ListMaster;
+				PRODUCT_BUNDLE_IDENTIFIER = com.realuglyduck.Trolleyst;
 				PRODUCT_NAME = Trolleyst;
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -725,7 +725,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AED00FE61FCB62A1003DC497 /* Build configuration list for PBXProject "ListMaster" */ = {
+		AED00FE61FCB62A1003DC497 /* Build configuration list for PBXProject "Trolleyst" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AED00FFE1FCB62A1003DC497 /* Debug */,
