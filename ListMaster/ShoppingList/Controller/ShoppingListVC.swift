@@ -35,7 +35,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let backButtonTapButton: UIButton = {
         let button = UIButton()
-        button.accessibilityTraits = UIAccessibilityTraits.button
+        button.accessibilityTraits = UIAccessibilityTraitButton
         button.accessibilityLabel = "Back to your lists"
         button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         return button
@@ -51,7 +51,7 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     let addItemTapButton: UIButton = {
         let button = UIButton()
-        button.accessibilityTraits = UIAccessibilityTraits.button
+        button.accessibilityTraits = UIAccessibilityTraitButton
         button.accessibilityLabel = "Add products button"
         button.addTarget(self, action: #selector(addNewItem), for: .touchUpInside)
         return button

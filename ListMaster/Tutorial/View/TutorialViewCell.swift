@@ -44,7 +44,7 @@ class TutorialViewCell: UICollectionViewCell {
         button.setTitle("Get Started", for: .normal)
         button.isHidden = true
         button.isAccessibilityElement = true
-        button.accessibilityTraits = .button
+        button.accessibilityTraits = UIAccessibilityTraitButton
         return button
     }()
     
@@ -107,19 +107,19 @@ class TutorialViewCell: UICollectionViewCell {
         let descColor = UIColor(red: 97/255, green: 97/255, blue: 97/255, alpha: 1)
         let attributedString = NSMutableAttributedString(
             string: title,
-            attributes: [NSAttributedString.Key.font:titleMetricsFont.scaledFont(for: titleFont!),
-                         NSAttributedString.Key.foregroundColor:titleColor])
+            attributes: [NSAttributedStringKey.font:titleMetricsFont.scaledFont(for: titleFont!),
+                         NSAttributedStringKey.foregroundColor:titleColor])
         
         attributedString.append(NSAttributedString(
             string: "\n\n\(description)",
-            attributes: [NSAttributedString.Key.font:descMetricsFont.scaledFont(for: descFont!),
-                         NSAttributedString.Key.foregroundColor:descColor]))
+            attributes: [NSAttributedStringKey.font:descMetricsFont.scaledFont(for: descFont!),
+                         NSAttributedStringKey.foregroundColor:descColor]))
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
         let lenght = attributedString.string.count
-        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, lenght))
+        attributedString.addAttribute(NSAttributedStringKey.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, lenght))
         
         return attributedString
         

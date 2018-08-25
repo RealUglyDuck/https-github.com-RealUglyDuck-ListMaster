@@ -24,7 +24,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
     let infoTapView : UIButton = {
         let button = UIButton()
         button.isAccessibilityElement = true
-        button.accessibilityTraits = UIAccessibilityTraits.button
+        button.accessibilityTraits = UIAccessibilityTraitButton
         button.accessibilityLabel = "Instruction how to use Trolleyst"
         return button
     }()
@@ -84,7 +84,7 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         button.setImage(backgroundImage, for: .normal)
         button.addTarget(self, action: #selector(addNewItemPressed), for: .touchUpInside)
         button.accessibilityLabel = "Add new list"
-        button.accessibilityTraits = .button
+        button.accessibilityTraits = UIAccessibilityTraitButton
         //        button.target(forAction: #selector(addNewItem), withSender: self)
         return button
     }()

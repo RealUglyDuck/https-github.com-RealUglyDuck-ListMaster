@@ -23,13 +23,13 @@ class EmptyListView: UIView {
         let fontType = UIFont(name: "HelveticaNeue-Medium", size: 16)
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         let font = fontMetrics.scaledFont(for: fontType!)
-        let attributedText = NSMutableAttributedString(string: firstString, attributes: [NSAttributedString.Key.font:font])
+        let attributedText = NSMutableAttributedString(string: firstString, attributes: [NSAttributedStringKey.font:font])
         let attributedImage = NSTextAttachment()
         attributedImage.image = UIImage(named: imageName)
         attributedImage.bounds = CGRect(x: 0, y: -(image?.size.height)!/8, width: (image?.size.width)!/2, height: (image?.size.height)!/2)
         
         attributedText.append(NSAttributedString(attachment: attributedImage))
-        attributedText.append(NSAttributedString(string: secondString, attributes: [NSAttributedString.Key.font:font]))
+        attributedText.append(NSAttributedString(string: secondString, attributes: [NSAttributedStringKey.font:font]))
         label.attributedText = attributedText
         label.textColor = MAIN_COLOR
         addSubview(label)

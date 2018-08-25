@@ -32,7 +32,7 @@ class NewListVC: UIViewController, UIGestureRecognizerDelegate, UITextFieldDeleg
         button.addTarget(self, action: #selector(closeButtonPressed), for: .touchUpInside)
         button.isAccessibilityElement = true
         button.accessibilityLabel = "Back to Lists"
-        button.accessibilityTraits = UIAccessibilityTraits.button
+        button.accessibilityTraits = UIAccessibilityTraitButton
         return button
     }()
     

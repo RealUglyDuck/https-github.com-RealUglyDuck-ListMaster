@@ -57,7 +57,7 @@ class FilledUIButton: UIButton {
     
     override var accessibilityTraits: UIAccessibilityTraits {
         get {
-            return UIAccessibilityTraits.button
+            return UIAccessibilityTraitButton
         }
         set {}
     }
@@ -103,7 +103,7 @@ class TitleUILabel: UILabel {
     
     override var accessibilityTraits: UIAccessibilityTraits{
         get{
-            return UIAccessibilityTraits.header
+            return UIAccessibilityTraitHeader
         }
         set{}
     }
@@ -125,7 +125,7 @@ class NewTextField: UITextField {
         self.leftView = paddingView
         self.leftViewMode = .always
 
-        self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedString.Key.foregroundColor:UIColor.white])
+        self.attributedPlaceholder = NSAttributedString(string: "Name", attributes: [NSAttributedStringKey.foregroundColor:UIColor.white])
         self.placeholder = ""
         
         self.layer.shadowColor = UIColor.black.cgColor
@@ -180,7 +180,7 @@ class StandardUISegmentedControl: UISegmentedControl {
         self.layer.borderColor = MAIN_COLOR.cgColor
         self.tintColor = MAIN_COLOR
         self.backgroundColor = .clear
-        self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor:UIColor.white], for: .normal)
+        self.setTitleTextAttributes([NSAttributedStringKey.foregroundColor:UIColor.white], for: .normal)
     }
 
     override init(items: [Any]?) {
@@ -294,19 +294,19 @@ extension UIView {
         }
     }
     
-    func constraintWith(visualFormat:String,views:UIView...) {
-        
-        var viewsDict:Dictionary<String,UIView> = [:]
-        
-        for index in views.indices {
-            
-            views[index].translatesAutoresizingMaskIntoConstraints = false
-            let viewName = "v\(index)"
-            viewsDict[viewName] = views[index]
-        }
-        
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDict))
-    }
+//    func constraintWith(visualFormat:String,views:UIView...) {
+//
+//        var viewsDict:Dictionary<String,UIView> = [:]
+//
+//        for index in views.indices {
+//
+//            views[index].translatesAutoresizingMaskIntoConstraints = false
+//            let viewName = "v\(index)"
+//            viewsDict[viewName] = views[index]
+//        }
+//
+//        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: visualFormat, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDict))
+//    }
     
     func addGradient() {
         let gradient = CAGradientLayer()

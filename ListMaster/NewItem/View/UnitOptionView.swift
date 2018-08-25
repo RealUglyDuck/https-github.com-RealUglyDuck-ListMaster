@@ -22,7 +22,7 @@ class UnitOptionView: UIView {
         self.layer.shadowRadius = 5
         
         self.isAccessibilityElement = true
-        self.accessibilityTraits = UIAccessibilityTraits.button
+        self.accessibilityTraits = UIAccessibilityTraitButton
         optionName.text = "PCS"
         optionName.textColor = .white
         optionName.textAlignment = .center

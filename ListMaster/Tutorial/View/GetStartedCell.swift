@@ -15,7 +15,7 @@ class GetStartedCell: UICollectionViewCell {
         button.setTitle("Get Started", for: .normal)
         button.isHidden = true
         button.isAccessibilityElement = true
-        button.accessibilityTraits = .button
+        button.accessibilityTraits = UIAccessibilityTraitButton
         return button
     }()
     

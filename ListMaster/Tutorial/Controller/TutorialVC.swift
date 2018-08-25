@@ -77,7 +77,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         
         pageControl.currentPage += 1
         
-        UIAccessibility.post(notification: UIAccessibility.Notification.layoutChanged, argument: nil)
+        UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
     }
     
     func hideNextButton() {
@@ -108,7 +108,7 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.isPagingEnabled = true
         cv.backgroundColor = .white
-        cv.accessibilityTraits = UIAccessibilityTraits.adjustable
+        cv.accessibilityTraits = UIAccessibilityTraitAdjustable
         cv.allowsSelection = false
         cv.remembersLastFocusedIndexPath = true
         return cv
@@ -219,7 +219,8 @@ class TutorialVC: UIViewController, UICollectionViewDelegate, UICollectionViewDa
                 self.view.layoutIfNeeded()
             }, completion: nil)
         }
-UIAccessibility.post(notification: UIAccessibility.Notification.layoutChanged, argument: nil)
+        UIAccessibilityPostNotification(UIAccessibilityLayoutChangedNotification, nil)
+        
         
     }
     
