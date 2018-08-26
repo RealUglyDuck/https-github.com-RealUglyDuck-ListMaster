@@ -135,6 +135,8 @@ class MainVC: UIViewController, UITableViewDelegate,UITableViewDataSource, NSFet
         listsTableView.separatorInset = UIEdgeInsets.zero
         view.clipsToBounds = true
         infoTapView.addTarget(self, action: #selector(infoButtonPressed), for: .touchUpInside)
+        let newProductTap = UITapGestureRecognizer(target: self, action: #selector(addNewItemPressed))
+        emptyListsView.addGestureRecognizer(newProductTap)
     }
     
     override func viewDidAppear(_ animated: Bool) {

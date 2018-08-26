@@ -129,7 +129,7 @@ class NewItemVC: UIViewController, UITableViewDelegate, UITableViewDataSource, U
         
         let textField = NewTextField()
         
-        textField.placeholder = "List name..."
+        textField.placeholder = "Product name..."
         
         textField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
         

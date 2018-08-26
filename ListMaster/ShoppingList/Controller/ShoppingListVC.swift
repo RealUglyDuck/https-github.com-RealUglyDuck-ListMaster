@@ -138,6 +138,8 @@ class ShoppingListVC: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(backButtonPressed))
         backButtonTapButton.addGestureRecognizer(tap)
+        let newProductTap = UITapGestureRecognizer(target: self, action: #selector(addNewItem))
+        emptyListView.addGestureRecognizer(newProductTap)
 
     }
     
